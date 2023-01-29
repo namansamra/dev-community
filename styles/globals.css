@@ -1,3 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer utilities {
+  @variants responsive {
+    .text-shadow-behind-left {
+      text-shadow: -10px 0px 0px #08fdd8;
+    }
+    .text-shadow-behind-after {
+      text-shadow: 5px 0px 0px #08fdd8;
+    }
+  }
+}
+
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
