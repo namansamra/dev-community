@@ -14,14 +14,13 @@ type CustomAppProps = AppProps & {
   Component: NextComponentType & { auth?: boolean }; // add auth type
 };
 
-const emotionCache = createCache({
-  key: 'emotion-css-cache',
-  prepend: true, // ensures styles are prepended to the <head>, instead of appended
-});
-
-const client = new QueryClient();
-
 export default function App({ Component, pageProps }: CustomAppProps) {
+  const emotionCache = createCache({
+    key: 'emotion-css-cache',
+    prepend: true, // ensures styles are prepended to the <head>, instead of appended
+  });
+
+  const client = new QueryClient();
   return (
     <QueryClientProvider client={client}>
       <CacheProvider value={emotionCache}>
