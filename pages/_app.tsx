@@ -41,7 +41,7 @@ export default function App({ Component, pageProps }: CustomAppProps) {
 function Auth({ children }: { children: ReactNode }) {
   // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
   const { session, status } = useSessionCustom({ required: true });
-
+  console.log(session, 'heloooi');
   if (status === 'loading') {
     return <div>Loading...</div>;
   }
