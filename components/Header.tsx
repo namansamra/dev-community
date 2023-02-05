@@ -1,64 +1,28 @@
-import {
-  Button,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  InputRightElement,
-  useDisclosure,
-} from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { AiOutlineMenu } from 'react-icons/ai';
 import { FiSearch } from 'react-icons/fi';
 import { RiNotification3Line } from 'react-icons/ri';
-import {
-  Drawer,
-  DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuGroup,
-  MenuDivider,
-} from '@chakra-ui/react';
 import DevLogo from '@/assets/images/dev-general-icon.png';
 import AnonymousUser from '@/assets/images/user-line.svg';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useSessionCustom } from '@/lib/next-auth-react-query';
-import { signIn, signOut } from 'next-auth/react';
-
-interface SideDrawerProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-const SideDrawer = ({ isOpen, onClose }: SideDrawerProps) => {
-  return (
-    <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
-      <DrawerOverlay />
-      <DrawerContent>
-        <DrawerCloseButton />
-        <DrawerHeader>Create your account</DrawerHeader>
-
-        <DrawerBody>
-          <h1>Hello Hello!!</h1>
-        </DrawerBody>
-
-        <DrawerFooter>
-          <Button variant="outline" mr={3} onClick={onClose}>
-            Cancel
-          </Button>
-          <Button colorScheme="blue">Save</Button>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
-  );
-};
+import { signOut } from 'next-auth/react';
+import {
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuGroup,
+  MenuDivider,
+  Button,
+  Input,
+  InputGroup,
+  InputRightElement,
+  useDisclosure,
+} from '@chakra-ui/react';
+import { SideDrawer } from './Sidebar';
 
 const MenuItemsList = [
   {
@@ -173,7 +137,7 @@ function Header({ containerStyles = '' }) {
               }
               className="cursor-pointer hover:bg-[#EDF2F7] rounded-md h-[38px] mt-[1px]"
             >
-              <FiSearch size={20} />
+              <FiSearch size={22} />
             </InputRightElement>
           </InputGroup>
         </div>
