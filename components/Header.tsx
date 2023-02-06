@@ -107,8 +107,10 @@ function Header({ containerStyles = '' }) {
   console.log(session);
   const router = useRouter();
   return (
-    <header className={`w-full ${containerStyles} bg-white`}>
-      <div className="flex items-center p-2 z-50 w-full h-[56px] border-b-[1px] border-[#ede7e7] shadow-sm sm:px-4 md:px-10 lg:px-[100px] justify-between">
+    <header
+      className={`w-full ${containerStyles} bg-white fixed top-0 left-0 right-0 z-50`}
+    >
+      <div className="flex items-center p-2 z-50 w-full h-[56px] border-b-[1px] border-[#ede7e7] shadow-sm sm:px-4 md:px-6 xl:px-[80px] justify-between">
         <div className="flex items-center">
           <Button
             variant={'ghost'}
