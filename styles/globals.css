@@ -100,3 +100,98 @@ a {
     color-scheme: dark;
   }
 }
+
+.w-md-editor {
+  box-shadow: none !important;
+  border-radius: none !important;
+}
+
+.w-md-editor-toolbar {
+  background-color: #f9f9f9be !important;
+  border: none !important;
+  display: flex !important;
+  padding: 4px 40px !important;
+}
+
+.w-md-editor-toolbar > ul {
+  display: flex !important;
+}
+
+.w-md-editor-toolbar li button {
+  font-size: 20px !important;
+  padding: 8px !important;
+  height: 40px !important;
+  width: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: auto 2px !important;
+  font-weight: 400 !important;
+  color: rgb(38, 38, 38) !important;
+}
+
+.w-md-editor-toolbar li.active > button {
+  color: rgba(47, 58, 178) !important;
+  background-color: rgba(59, 73, 223, 0.1) !important;
+  border-radius: 4px !important;
+}
+
+.w-md-editor-toolbar li button svg {
+  height: 18px !important;
+  width: 18px !important;
+  font-weight: 400 !important;
+}
+
+.w-md-editor-toolbar li button:hover {
+  transition: none;
+  color: rgba(47, 58, 178) !important;
+  background-color: rgba(59, 73, 223, 0.1) !important;
+  /* background-color: white !important; */
+  /* box-shadow: 2px 2px #e8e8e8 !important; */
+  border-radius: 5px !important;
+}
+
+.w-md-editor-text-pre > code,
+.w-md-editor-text,
+.w-md-editor-text-input,
+.w-md-editor-content {
+  font-size: 18px !important;
+  line-height: 20px !important;
+  color: rgb(23, 23, 23) !important;
+  width: 780px !important;
+  margin: 0px auto !important;
+  font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo,
+    Courier, monospace;
+}
+
+.w-md-editor-toolbar li button[data-name='live'] {
+  display: none !important;
+}
+
+.w-md-editor-toolbar li button[data-name='fullscreen'] {
+  display: none !important;
+}
+
+.w-md-editor-toolbar li button[data-name='strikethrough'] {
+  display: none !important;
+}
+.w-md-editor-toolbar li button[data-name='hr'] {
+  display: none !important;
+}
+
+.w-md-editor-toolbar li button[data-name='title2'] {
+  display: none !important;
+}
+.w-md-editor-toolbar li button[data-name='edit'] {
+  display: none !important;
+}
+.w-md-editor-toolbar li button[data-name='preview'] {
+  display: none !important;
+}
+.w-md-editor-toolbar .w-md-editor-toolbar-divider {
+  display: none !important;
+}
+
+.w-md-editor-toolbar li {
+  order: -1 !important;
+}

@@ -156,7 +156,9 @@ function Header({ containerStyles = '' }) {
               <Button
                 variant={'outline'}
                 className="min-w-[120px] hidden md:block border-[1px] border-primaryBlue text-primaryBlue hover:bg-primaryBlue hover:text-white"
-                onClick={() => {}}
+                onClick={() => {
+                  router.push('/new');
+                }}
               >
                 Create Post
               </Button>
