@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
 import '@uiw/react-md-editor/markdown-editor.css';
 import '@uiw/react-markdown-preview/markdown.css';
 import dynamic from 'next/dynamic';
-import { Button } from '@chakra-ui/react';
-import type { SetStateAction } from 'react';
+import { Button, Input } from '@chakra-ui/react';
+import Image from 'next/image';
+import DEVLogo from '@/assets/images/dev-general-icon.png';
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false });
 
 const insertToTextArea = (intsertString: string) => {
@@ -64,15 +64,27 @@ const onImagePasted = async (
   }
 };
 
-export default function App() {
+interface Props {
+  selectedView: 'edit' | 'preview';
+  setSelectedView: React.Dispatch<React.SetStateAction<'edit' | 'preview'>>;
+}
+
+export default function Editor({ selectedView, setSelectedView }: Props) {
   const [value, setValue] = React.useState(
     'Hello Markdown! `Tab` key uses default behavior'
   );
-  const [selectedView, setSelectedView] = useState<'edit' | 'preview'>('edit');
   return (
-    <div className="flex flex-col border-2 border-cyan gap-2">
-      <div className="flex items-center justify-between w-full px-[20px] pt-[10px]">
-        <h3>DEV</h3>
+    <div className="flex flex-col gap-4 ">
+      <div className="flex items-center justify-between pt-[10px] w-[850px]">
+        <div className="flex items-center font-semibold">
+          <Image
+            src={DEVLogo}
+            alt={'dev-logo'}
+            className="h-[40px] w-[50px] rounded-[3px] mr-3"
+          />
+          <h2>Create Post</h2>
+        </div>
+
         <div className="flex items-center gap-2">
           <Button
             variant={'outline'}
@@ -98,22 +110,46 @@ export default function App() {
           </Button>
         </div>
       </div>
-      <MDEditor
-        value={value}
-        onChange={(val) => {
-          setValue(val!);
-        }}
-        height={400}
-        style={{ width: '850px', fontSize: '18px !important' }}
-        toolbarHeight={56}
-        preview={selectedView}
-        onPaste={async (event) => {
-          await onImagePasted(event.clipboardData, setValue);
-        }}
-        onDrop={async (event) => {
-          await onImagePasted(event.dataTransfer, setValue);
-        }}
-      />
+      <div className="flex gap-4">
+        <div className="flex flex-col w-[850px] ml-[80px] h-[600px] overflow-y-scroll rounded-lg relative">
+          <div className="flex flex-col gap-4 w-full rounded-md shadow-sm shadow-grey-400 rounded-br-none rounded-bl-none bg-white p-10">
+            <Button variant={'outline'} className="bg-white w-[200px]">
+              Add Cover Image
+            </Button>
+            <Input
+              variant={'unstyled'}
+              placeholder="New post title here..."
+              className="text-5xl font-bold"
+            />
+            <Input variant={'unstyled'} placeholder="Add upto 4 tags..." />
+          </div>
+
+          <div className="flex w-full relative">
+            <MDEditor
+              value={value}
+              onChange={(val) => {
+                setValue(val!);
+              }}
+              style={{
+                width: '850px',
+                fontSize: '18px !important',
+                borderTop: '0px !important',
+              }}
+              visiableDragbar={false}
+              enableScroll={false}
+              toolbarHeight={56}
+              preview={selectedView}
+              onPaste={async (event) => {
+                await onImagePasted(event.clipboardData, setValue);
+              }}
+              onDrop={async (event) => {
+                await onImagePasted(event.dataTransfer, setValue);
+              }}
+            />
+          </div>
+        </div>
+        <div className="flex flex-col border-2 border-primaryBlue w-[300px] h-[500px]"></div>
+      </div>
     </div>
   );
 }

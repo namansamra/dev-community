@@ -1,14 +1,12 @@
 import Editor from '@/components/Editor';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 function NewPost() {
-  const ref: React.MutableRefObject<any> = useRef();
+  const [selectedView, setSelectedView] = useState<'edit' | 'preview'>('edit');
   return (
-    <div className="">
-      <div className="flex flex-col w-full">
-        <div className="flex item-center gap-2">
-          <Editor />
-        </div>
+    <div className="flex flex-col gap-2 w-full h-screen">
+      <div className="flex mx-auto">
+        <Editor selectedView={selectedView} setSelectedView={setSelectedView} />
       </div>
     </div>
   );

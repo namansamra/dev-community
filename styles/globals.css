@@ -102,15 +102,25 @@ a {
 }
 
 .w-md-editor {
-  box-shadow: none !important;
-  border-radius: none !important;
+  border-radius: 8px !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  clip-path: inset(0px -10px -10px -10px);
+  height: 100% !important;
+}
+
+.w-md-editor-show-preview {
+  height: 100% !important;
 }
 
 .w-md-editor-toolbar {
-  background-color: #f9f9f9be !important;
+  background-color: #f9f9f9 !important;
   border: none !important;
   display: flex !important;
   padding: 4px 40px !important;
+  position: sticky;
+  top: 0 !important;
+  z-index: 5;
 }
 
 .w-md-editor-toolbar > ul {
@@ -154,7 +164,8 @@ a {
 .w-md-editor-text-pre > code,
 .w-md-editor-text,
 .w-md-editor-text-input,
-.w-md-editor-content {
+.w-md-editor-content,
+.w-md-editor-preview {
   font-size: 18px !important;
   line-height: 20px !important;
   color: rgb(23, 23, 23) !important;
@@ -162,6 +173,12 @@ a {
   margin: 0px auto !important;
   font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo,
     Courier, monospace;
+  height: max-content !important;
+  min-height: 300px !important;
+}
+
+.w-md-editor-preview {
+  position: relative !important;
 }
 
 .w-md-editor-toolbar li button[data-name='live'] {
@@ -192,6 +209,6 @@ a {
   display: none !important;
 }
 
-.w-md-editor-toolbar li {
-  order: -1 !important;
+.w-md-editor-text-input {
+  height: 100% !important;
 }
