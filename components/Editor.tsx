@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { Button, Input } from '@chakra-ui/react';
 import Image from 'next/image';
 import DEVLogo from '@/assets/images/dev-general-icon.png';
+import UploadImage from '@/assets/images/image.svg';
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false });
 
 const insertToTextArea = (intsertString: string) => {
@@ -110,7 +111,7 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
           </Button>
         </div>
       </div>
-      <div className="flex gap-4">
+      <div className="flex gap-8">
         <div className="flex flex-col w-[850px] ml-[80px] h-[600px] overflow-y-scroll rounded-lg relative">
           <div className="flex flex-col gap-4 w-full rounded-md shadow-sm shadow-grey-400 rounded-br-none rounded-bl-none bg-white p-10">
             <Button variant={'outline'} className="bg-white w-[200px]">
@@ -146,6 +147,11 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
                 await onImagePasted(event.dataTransfer, setValue);
               }}
             />
+            <div className="flex items-center justify-center border-brick border-2 h-[30px] w-[30px] absolute right-[44%] top-3">
+              <Button className="bg-[#f6f6f6] h-[40px] w-[40px] p-2">
+                <Image src={UploadImage} alt="upload" />
+              </Button>
+            </div>
           </div>
         </div>
         <div className="flex flex-col border-2 border-primaryBlue w-[300px] h-[500px]"></div>
