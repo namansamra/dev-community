@@ -1,10 +1,11 @@
-import NextAuth from 'next-auth';
+import NextAuth, { CallbacksOptions, SessionOptions } from 'next-auth';
 import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '../../../lib/prismadb';
+import { Session } from 'inspector';
 
-export default NextAuth({
+export const authOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GitHubProvider({
@@ -19,9 +20,22 @@ export default NextAuth({
     }),
   ],
   secret: process.env.JWT_SECRET,
-
   pages: {
     signIn: '/enter',
     newUser: '/enter?state=newuser',
   },
-});
+  callbacks: {
+    async session({ session }: any) {
+      // Send properties to the client, like an access_token and user id from a provider.
+      const dbuser = await prisma.user.findFirst({
+        where: {
+          email: session.user.email,
+        },
+      });
+      session.user = dbuser;
+      return session;
+    },
+  },
+};
+
+export default NextAuth(authOptions);

@@ -19,6 +19,7 @@ module.exports = {
       tagColor: '#515152',
       sideMenuBg: '#181818',
       primaryBlue: '#3B49DF',
+      primaryBlueLight: '#d8dbf9',
       grey: {
         DEFAULT: '#475467',
         10: '#FEFEFF',

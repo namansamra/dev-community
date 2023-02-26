@@ -65,6 +65,7 @@ model Post {
   id         String    @id @default(cuid())
   createdAt  DateTime  @default(now())
   slug       String
+  title      String
   body       String
   likes      Int       @default(0)
   saved      Int       @default(0)

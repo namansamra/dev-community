@@ -51,6 +51,7 @@ CREATE TABLE "Post" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "slug" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
     "body" TEXT NOT NULL,
     "likes" INTEGER NOT NULL DEFAULT 0,
     "saved" INTEGER NOT NULL DEFAULT 0,
