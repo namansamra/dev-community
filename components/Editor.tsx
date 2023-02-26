@@ -74,6 +74,7 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
   const [value, setValue] = React.useState(
     'Hello Markdown! `Tab` key uses default behavior'
   );
+  const [title, setTitle] = useState('');
 
   const { mutate, isLoading, error, data } = useMutation(
     'create-post',
@@ -136,6 +137,8 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
               variant={'unstyled'}
               placeholder="New post title here..."
               className="text-5xl font-bold"
+              title={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
             <Input variant={'unstyled'} placeholder="Add upto 4 tags..." />
           </div>
@@ -176,10 +179,10 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
             onClick={() =>
               mutate({
                 slug: 'new-post-' + Math.random() * 100,
+                title: title,
                 body: value,
                 coverImage:
                   'https://tkdodo.eu/blog/static/e7fe4197241e1f30c5b0b6f2bc497c64/bbe0c/mutations.jpg',
-                authorId: session.user.id,
               })
             }
           >

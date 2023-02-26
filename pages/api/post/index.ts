@@ -51,6 +51,17 @@ const handlePost = async (
     const post = await prisma.post.create({
       data: {
         ...body,
+        authorId: req.user.id,
+      },
+    });
+    const p = await prisma.user.update({
+      where: {
+        id: req.user.id,
+      },
+      data: {
+        writtenPosts: {
+          create: body,
+        },
       },
     });
     res.status(201).json({

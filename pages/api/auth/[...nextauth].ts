@@ -31,6 +31,11 @@ export const authOptions = {
         where: {
           email: session.user.email,
         },
+        include: {
+          writtenPosts: true,
+          likedPosts: true,
+          likedComments: true,
+        },
       });
       session.user = dbuser;
       return session;
