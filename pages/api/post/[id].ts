@@ -29,12 +29,26 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 const handleGet = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
   try {
     const { id } = req.query;
-    console.log(id);
+    console.log(req.query);
     const post = await prisma.post.findFirst({
       where: {
         id: id as string,
       },
+      include: {
+        comments: true,
+        tags: true,
+        likedBy: true,
+        author: {
+          select: {
+            name: true,
+            image: true,
+            bio: true,
+            createdAt: true,
+          },
+        },
+      },
     });
+
     res.status(200).json({
       status: 'success',
       data: {

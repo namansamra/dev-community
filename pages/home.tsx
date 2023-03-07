@@ -1,7 +1,17 @@
+import Layout from '@/components/Layout';
+import Post from '@/components/Post';
 import React from 'react';
 
 function home() {
-  return <div>home protected hu</div>;
+  return (
+    <Layout>
+      <div className="flex flex-col w-full lg:w-[650px]  gap-4">
+        <Post />
+        <Post />
+        <Post />
+      </div>
+    </Layout>
+  );
 }
 
 home.auth = true;

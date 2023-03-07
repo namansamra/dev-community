@@ -104,7 +104,7 @@ function Header({ containerStyles = '' }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [searchTerm, setSearchTerm] = useState('');
   const { session, status } = useSessionCustom();
-  console.log(session);
+  console.log(session, 'header me session');
   const router = useRouter();
   return (
     <header
@@ -121,12 +121,13 @@ function Header({ containerStyles = '' }) {
             <AiOutlineMenu size={24} />
           </Button>
           <SideDrawer isOpen={isOpen} onClose={onClose} />
-          <Image
-            src={DevLogo}
-            alt="DEV"
-            className="h-[40px] w-[50px] rounded-[3px] mr-3"
-          />
-
+          <Link href={'/'}>
+            <Image
+              src={DevLogo}
+              alt="DEV"
+              className="h-[40px] w-[50px] rounded-[3px] mr-3"
+            />
+          </Link>
           <InputGroup className="hidden md:w-[400px] md:max-w-[500px] md:block">
             <Input
               placeholder="Search..."

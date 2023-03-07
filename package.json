@@ -20,6 +20,7 @@
     "@types/react-dom": "18.0.10",
     "@uiw/react-md-editor": "3.6.0",
     "axios": "^1.3.4",
+    "chakra-ui-markdown-renderer": "^4.1.0",
     "eslint": "8.32.0",
     "eslint-config-next": "13.1.4",
     "form-data": "^4.0.0",
@@ -34,7 +35,9 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.7.1",
     "react-inlinesvg": "^3.0.1",
+    "react-markdown": "^8.0.5",
     "react-query": "^3.39.3",
+    "remark-gfm": "^3.0.1",
     "typescript": "4.9.4"
   },
   "devDependencies": {

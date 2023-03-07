@@ -23,35 +23,42 @@ async function handler(req: NextApiRequestWithUser, res: NextApiResponse) {
 }
 
 const handlePut = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
-  const { id, isLiked } = req.query;
-  console.log(id, isLiked, 'euresda', req.user);
+  const { id } = req.query;
   try {
-    const { tagName } = req.query;
+    const value = req.body.value;
     const post = await prisma.post.update({
       where: {
         id: id as string,
       },
       data: {
-        likedBy: req.user.id,
         likes: {
-          increment: 1,
+          ...(value ? { increment: 1 } : { decrement: 1 }),
         },
       },
     });
-    // await prisma.user.update({
-    //   where: {
-    //     id: req.user.id as string,
-    //   },
-    //   data: {},
-    // });
+
+    console.log(req.user.id);
+    const p = await prisma.user.update({
+      where: {
+        email: req.user.email as string,
+      },
+      data: {
+        likedPosts: {
+          connect: {
+            id: post.id,
+          },
+        },
+      },
+    });
+    console.log(p, 'p hu bhai');
     res.status(200).json({
       status: 'success',
       data: {
         post: post,
       },
     });
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    console.log(error.message);
     res.status(400).json({
       status: 'error',
       message: 'Cannot fetch post!!',

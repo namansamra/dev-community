@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  ChangeEvent,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import '@uiw/react-md-editor/markdown-editor.css';
 import '@uiw/react-markdown-preview/markdown.css';
 import dynamic from 'next/dynamic';
@@ -35,6 +41,21 @@ const insertToTextArea = (intsertString: string) => {
   return sentence;
 };
 
+const uploadImageToServer = async (file: File) => {
+  try {
+    const formData = new FormData();
+    formData.append('image', file);
+    const res = await fetch('http://localhost:3000/api/upload/image', {
+      method: 'POST',
+      body: formData,
+    });
+    const jsonres = await res.json();
+    return jsonres?.data?.url;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const onImagePasted = async (
   dataTransfer: DataTransfer,
   setMarkdown: React.Dispatch<React.SetStateAction<string>>
@@ -47,15 +68,13 @@ const onImagePasted = async (
     }
   }
 
+  if (files.length == 0) {
+    return;
+  }
+
   try {
-    const formData = new FormData();
-    formData.append('image', files[0]);
-    const res = await fetch('http://localhost:3000/api/upload/image', {
-      method: 'POST',
-      body: formData,
-    });
-    const jsonres = await res.json();
-    const insertedMarkdown = insertToTextArea(`![](${jsonres?.data?.url})`);
+    const imageUrl = await uploadImageToServer(files[0]);
+    const insertedMarkdown = insertToTextArea(`![](${imageUrl})`);
     if (!insertedMarkdown) {
       return;
     }
@@ -63,6 +82,105 @@ const onImagePasted = async (
   } catch (error) {
     console.log(error);
   }
+};
+
+const AddCoverImageComponent = ({
+  coverImageUrl,
+  setCoverImageUrl,
+}: {
+  coverImageUrl: string;
+  setCoverImageUrl: (url: string) => void;
+}) => {
+  const [file, setFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const ref = useRef<any>();
+
+  console.log(file);
+
+  const handleChange = (action: string) => {
+    console.log(ref.current);
+    switch (action) {
+      case 'add':
+        ref.current.click();
+        break;
+      case 'remove':
+        ref.current.value = null;
+        setFile(null);
+        break;
+      case 'change':
+        ref.current.click();
+        break;
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => {
+    if (file) {
+      const upload = async () => {
+        setIsUploading(true);
+        const url = await uploadImageToServer(file);
+        console.log(url);
+        setCoverImageUrl && setCoverImageUrl(url);
+        setIsUploading(false);
+      };
+      upload();
+    }
+  }, [file]);
+
+  return (
+    <div className="flex items-center gap-4">
+      <input
+        className="hidden"
+        ref={ref}
+        type="file"
+        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+          const files: FileList | null = e.target.files;
+          setFile(files![0]);
+        }}
+      />
+      {isUploading && (
+        <Button
+          variant={'primary'}
+          onClick={() => handleChange('add')}
+          isLoading={isUploading}
+          loadingText="Uploading..."
+        />
+      )}
+      {!isUploading && (
+        <>
+          {!file ? (
+            <Button
+              variant={'outline'}
+              className="bg-white w-[200px]"
+              onClick={() => handleChange('add')}
+              isLoading={isUploading}
+            >
+              Add Cover Image
+            </Button>
+          ) : (
+            <div className="flex items-center gap-2">
+              {file && file.name}
+              <Button
+                variant={'outline'}
+                className="bg-white w-[100px]"
+                onClick={() => handleChange('change')}
+              >
+                Change
+              </Button>
+              <Button
+                variant={'ghost'}
+                className="bg-white w-[100px] text-brick"
+                onClick={() => handleChange('remove')}
+              >
+                Remove
+              </Button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
 };
 
 interface Props {
@@ -75,10 +193,16 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
     'Hello Markdown! `Tab` key uses default behavior'
   );
   const [title, setTitle] = useState('');
+  const [coverImageUrl, setCoverImageUrl] = useState('');
 
   const { mutate, isLoading, error, data } = useMutation(
     'create-post',
-    createPost
+    createPost,
+    {
+      onSuccess: () => {
+        router.push('/');
+      },
+    }
   );
   const { session } = useSessionCustom();
 
@@ -130,9 +254,10 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
       <div className="flex flex-col gap-4  pl-[80px] pb-10">
         <div className="flex flex-col w-[850px]  h-[600px] overflow-y-scroll rounded-lg relative">
           <div className="flex flex-col gap-4 w-full rounded-md shadow-sm shadow-grey-400 rounded-br-none rounded-bl-none bg-white p-10">
-            <Button variant={'outline'} className="bg-white w-[200px]">
-              Add Cover Image
-            </Button>
+            <AddCoverImageComponent
+              coverImageUrl={coverImageUrl}
+              setCoverImageUrl={setCoverImageUrl}
+            />
             <Input
               variant={'unstyled'}
               placeholder="New post title here..."
@@ -181,10 +306,10 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
                 slug: 'new-post-' + Math.random() * 100,
                 title: title,
                 body: value,
-                coverImage:
-                  'https://tkdodo.eu/blog/static/e7fe4197241e1f30c5b0b6f2bc497c64/bbe0c/mutations.jpg',
+                coverImage: coverImageUrl,
               })
             }
+            isLoading={isLoading}
           >
             Publish
           </Button>

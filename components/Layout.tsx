@@ -2,7 +2,6 @@ import { Button } from '@chakra-ui/react';
 import Link from 'next/link';
 import React from 'react';
 import Header from './Header';
-import Post from './Post';
 import { SideBarLinksComponent } from './Sidebar';
 
 const discussSection = [
@@ -33,7 +32,7 @@ const discussSection = [
   },
 ];
 
-function Layout() {
+function Layout({ children }: { children?: React.ReactNode }) {
   return (
     <div className="flex flex-col w-screen relative">
       <Header />
@@ -41,11 +40,7 @@ function Layout() {
         <div className="flex-col gap-[4px] w-[250px] hidden md:block h-[100vh] overflow-y-scroll">
           <SideBarLinksComponent />
         </div>
-        <div className="flex flex-col w-full lg:w-[650px]  gap-4">
-          <Post />
-          <Post />
-          <Post />
-        </div>
+        {children}
         <aside className="flex-col max-w-[350px] ml-4 h-max hidden lg:block bg-grey-50 rounded-md">
           <div className="p-4 cursor-pointer text-grey-800 text-lg font-bold hover:text-primaryBlue">
             #discuss

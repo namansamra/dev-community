@@ -26,7 +26,17 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
 const handleGet = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
   try {
-    const posts = await prisma.post.findMany({});
+    const posts = await prisma.post.findMany({
+      include: {
+        author: {
+          select: {
+            name: true,
+            image: true,
+            id: true,
+          },
+        },
+      },
+    });
     res.status(200).json({
       status: 'success',
       data: {
