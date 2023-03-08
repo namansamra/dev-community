@@ -28,6 +28,7 @@ const handleGet = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
   try {
     const posts = await prisma.post.findMany({
       include: {
+        comments: true,
         author: {
           select: {
             name: true,
@@ -70,7 +71,9 @@ const handlePost = async (
       },
       data: {
         writtenPosts: {
-          create: body,
+          connect: {
+            id: post.id,
+          },
         },
       },
     });

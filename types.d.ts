@@ -21,4 +21,5 @@ export interface Post {
   coverImage: string;
   authorId: string;
   author: Author;
+  comments: any[];
 }

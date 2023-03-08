@@ -33,7 +33,11 @@ export const authOptions = {
         },
         include: {
           writtenPosts: true,
-          likedPosts: true,
+          likedPosts: {
+            select: {
+              id: true,
+            },
+          },
           likedComments: true,
         },
       });

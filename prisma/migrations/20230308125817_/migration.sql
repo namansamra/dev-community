@@ -42,6 +42,7 @@ CREATE TABLE "User" (
     "image" TEXT,
     "bio" TEXT NOT NULL DEFAULT '404 bio not found',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "savedPostsId" TEXT[],
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

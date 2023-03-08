@@ -1,7 +1,7 @@
 import prisma from '@/lib/prismadb';
 import withLoginOnly from '@/middlewares/withLogin';
 import { NextApiRequestWithUser } from '@/types';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiResponse } from 'next';
 
 async function handler(req: NextApiRequestWithUser, res: NextApiResponse) {
   const { method } = req;
@@ -31,7 +31,7 @@ const handlePut = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
         id: id as string,
       },
       data: {
-        likes: {
+        saved: {
           ...(value ? { increment: 1 } : { decrement: 1 }),
         },
       },
@@ -42,19 +42,19 @@ const handlePut = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
         email: req.user.email as string,
       },
       data: {
-        likedPosts: {
-          connect: {
-            id: post.id,
-          },
+        savedPostsId: {
+          set: value
+            ? [...req.user.savedPostsId, post.id]
+            : req.user.savedPostsId.filter((i: any) => i.id == post.id),
         },
       },
     });
+
     res.status(200).json({
       status: 'success',
-      message: 'Post liked successfully!',
+      message: 'Post saved successfully!',
     });
   } catch (error: any) {
-    console.log(error.message);
     res.status(400).json({
       status: 'error',
       message: 'Cannot fetch post!!',

@@ -5,11 +5,7 @@ import React from 'react';
 function home() {
   return (
     <Layout>
-      <div className="flex flex-col w-full lg:w-[650px]  gap-4">
-        <Post />
-        <Post />
-        <Post />
-      </div>
+      <div className="flex flex-col w-full lg:w-[650px]  gap-4">Home hu</div>
     </Layout>
   );
 }

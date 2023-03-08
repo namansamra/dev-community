@@ -20,7 +20,17 @@ export default function App({ Component, pageProps }: CustomAppProps) {
     prepend: true, // ensures styles are prepended to the <head>, instead of appended
   });
 
-  const client = new QueryClient();
+  const client = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 600000,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        refetchOnMount: false,
+        cacheTime: 60 * 1000 * 10,
+      },
+    },
+  });
   return (
     <QueryClientProvider client={client}>
       <CacheProvider value={emotionCache}>

@@ -59,6 +59,8 @@ model User {
   likedComments Comment[]
   accounts      Account[]
   sessions      Session[]
+  savedPostsId  String[]
+  following     String[]
 }
 
 model Post {

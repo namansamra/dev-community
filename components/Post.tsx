@@ -1,14 +1,40 @@
 import { Button, Flex, HStack, VStack } from '@chakra-ui/react';
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import HeartEmpty from '@/assets/images/heart.svg';
 import Comment from '@/assets/images/comment.svg';
-import Save from '@/assets/images/save.svg';
+import SavedFilled from '@/assets/images/save-filled.svg';
+import SavedEmpty from '@/assets/images/save.svg';
 import { Post } from '@/types';
 import { useRouter } from 'next/router';
+import { useSessionCustom } from '@/lib/next-auth-react-query';
+import { useMutation } from 'react-query';
+import { savePost } from '@/lib/commonApi';
 
 function Post({ postData }: { postData: Post }) {
   const router = useRouter();
+  const { session } = useSessionCustom();
+  const user = session?.user;
+  const handleActionButtons = () => {
+    router.push(`/post/${postData.id}`);
+  };
+  const [isSaved, setIsSaved] = useState(false);
+
+  useEffect(() => {
+    const value = user?.savedPostsId?.some((i: any) => i == postData.id);
+    setIsSaved(value);
+  }, [postData, user?.savedPostsId]);
+
+  const { mutate: savePostHandler } = useMutation(
+    ['save-post', postData.id],
+    (e: any) => savePost(postData.id, { value: !isSaved }),
+    {
+      onSuccess: () => {
+        setIsSaved((prev) => !prev);
+      },
+    }
+  );
+
   return (
     <div className="flex flex-col border-grey-300 bg-white border-[1px] rounded-md w-full">
       {postData.coverImage && (
@@ -76,6 +102,7 @@ function Post({ postData }: { postData: Post }) {
                   />
                 }
                 variant="ghost"
+                onClick={handleActionButtons}
               >
                 {postData.likes}{' '}
                 <span className="hidden md:block ml-1">Reactions</span>
@@ -92,22 +119,31 @@ function Post({ postData }: { postData: Post }) {
                   />
                 }
                 variant="ghost"
+                onClick={handleActionButtons}
               >
-                {postData.likes}
+                {postData.comments.length}
                 <span className="hidden md:block ml-1">Comments</span>
               </Button>
             </HStack>
 
             <HStack>
               <span className="text-grey-600 text-xs">4 min read</span>
-              <Button variant={'ghost'} p="2">
-                <Image
-                  src={Save}
-                  height={20}
-                  width={20}
-                  alt="save"
-                  className="opacity-70"
-                />
+              <Button variant={'ghost'} p="2" onClick={savePostHandler}>
+                {isSaved ? (
+                  <Image
+                    src={SavedFilled}
+                    width={25}
+                    height={25}
+                    alt="save-filled"
+                  />
+                ) : (
+                  <Image
+                    src={SavedEmpty}
+                    width={25}
+                    height={25}
+                    alt="save-empty"
+                  />
+                )}
               </Button>
             </HStack>
           </Flex>

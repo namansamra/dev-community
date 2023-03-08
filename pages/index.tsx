@@ -8,10 +8,8 @@ import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
 export default function Home() {
-  const [postsArr, setPostsArr] = useState([]);
   const { isLoading, data, error } = useQuery('get-posts', getAllPosts);
   const posts = data?.data.data.posts;
-  console.log(posts);
   if (isLoading) {
     return <div>Loading...</div>;
   }

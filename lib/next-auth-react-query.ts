@@ -13,7 +13,11 @@ export async function fetchSession() {
 export function useSessionCustom({
   required = false,
   redirectTo = '/api/auth/signin?error=SessionExpired',
-  queryConfig = {},
+  queryConfig = {
+    staleTime: 60 * 1000 * 60 * 3, // 3 hours
+    refetchInterval: 60 * 1000 * 10, // 10 minutes
+    cacheTime: 60 * 1000 * 10,
+  },
 } = {}) {
   const router = useRouter();
   const query = useQuery(['session'], fetchSession, {

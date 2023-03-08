@@ -1,5 +1,5 @@
 import Header from '@/components/Header';
-import { getDetailedPost, likePost } from '@/lib/commonApi';
+import { getDetailedPost, likePost, savePost } from '@/lib/commonApi';
 import { Button, Icon } from '@chakra-ui/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -7,25 +7,32 @@ import ReactMarkdown from 'react-markdown';
 import { useMutation, useQuery } from 'react-query';
 import ChakraUIRenderer from 'chakra-ui-markdown-renderer';
 import remarkGfm from 'remark-gfm';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import HeartFilled from '@/assets/images/heart-filled.svg';
 import HeartEmpty from '@/assets/images/heart.svg';
 import Comment from '@/assets/images/comment.svg';
 import SavedFilled from '@/assets/images/save-filled.svg';
 import SavedEmpty from '@/assets/images/save.svg';
+import { useSessionCustom } from '@/lib/next-auth-react-query';
 
 function PostDetails() {
   const router = useRouter();
   const { id } = router.query;
-  const { isLoading, data, error, refetch } = useQuery(
-    ['post-details', id],
-    () => getDetailedPost(id as string)
-  );
-
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const { session } = useSessionCustom();
+  console.log(id, 'id hu ');
 
-  const { mutate } = useMutation(
+  console.log(session, 'user hu bhai in detailed post');
+
+  const { isLoading, data, error, refetch } = useQuery(
+    ['post-details', id],
+    () => {
+      return getDetailedPost(id as string);
+    }
+  );
+
+  const { mutate: likePostHandler } = useMutation(
     'like-post',
     () => likePost(id as string, { value: !isLiked }),
     {
@@ -36,10 +43,39 @@ function PostDetails() {
     }
   );
 
+  const { mutate: savePostHandler } = useMutation(
+    ['save-post', id],
+    () => savePost(id as string, { value: !isSaved }),
+    {
+      onSuccess: () => {
+        refetch();
+        setIsSaved((prev) => !prev);
+      },
+    }
+  );
+
   const postData = data?.data?.data?.post;
 
-  console.log(postData, 'adsdas');
-  // items-center gap-4 w-[80px] border-2 border-brick hidden sm:block
+  useEffect(() => {
+    if (session?.user) {
+      const userAlreadyLiked = session?.user?.likedPosts?.some(
+        (p: any) => p.id == id
+      );
+      if (userAlreadyLiked) {
+        setIsLiked(userAlreadyLiked);
+      }
+
+      const userAlreadySaved = session?.user?.savedPostsId?.some(
+        (postId: any) => postId == id
+      );
+      console.log(userAlreadySaved, 'save hu');
+
+      if (userAlreadySaved) {
+        setIsSaved(userAlreadySaved);
+      }
+    }
+  }, [session, id]);
+
   return (
     <div className="flex flex-col w-screen relative">
       <Header />
@@ -49,7 +85,7 @@ function PostDetails() {
         <div className="flex justify-between mt-[80px] sm:px-4 md:px-6 xl:mx-[80px] xl:px-0 gap-4">
           <div className="flex-col h-max justify-center items-center gap-6 w-[50px] hidden sm:flex py-20">
             <Button
-              onClick={() => mutate()}
+              onClick={() => likePostHandler()}
               variant={'unstyled'}
               className="text-sm text-grey-500 flex-col justify-center items-center "
             >
@@ -68,7 +104,7 @@ function PostDetails() {
                   alt="heart-empty"
                 />
               )}
-              {postData.likes}
+              {postData?.likes}
             </Button>
             <Button
               onClick={() => setIsLiked((prev) => !prev)}
@@ -76,11 +112,11 @@ function PostDetails() {
               className="text-sm text-grey-500 flex-col justify-center items-center "
             >
               <Image src={Comment} width={25} height={25} alt="comment" />
-              {postData.comments?.length}
+              {postData?.comments?.length}
             </Button>
             <Button
               variant={'unstyled'}
-              onClick={() => setIsSaved((prev) => !prev)}
+              onClick={() => savePostHandler()}
               className="text-sm text-grey-500 flex-col justify-center items-center "
             >
               {isSaved ? (
@@ -98,6 +134,7 @@ function PostDetails() {
                   alt="save-empty"
                 />
               )}
+              {postData?.saved}
             </Button>
           </div>
           <div className="flex-1 w-full lg:w-[650px] border-[1px] border-grey-300 rounded-lg bg-white">
@@ -111,15 +148,15 @@ function PostDetails() {
             <div className="flex flex-col w-full px-16 py-8">
               <div className="w-full flex gap-2">
                 <Image
-                  src={postData.author.image}
-                  alt={postData.author.name}
+                  src={postData?.author?.image}
+                  alt={postData?.author?.name}
                   className="w-[40] h-[40] rounded-full"
                   width={40}
                   height={40}
                 />
                 <div className="flex flex-col leading-5">
                   <span className="text-md font-semibold text-grey-800">
-                    {postData.author.name}
+                    {postData?.author?.name}
                   </span>
                   <span className="text-sm text-grey-400">
                     posted on {new Date(postData.createdAt).toDateString()}
@@ -127,7 +164,7 @@ function PostDetails() {
                 </div>
               </div>
               <h2 className="text-5xl text-grey-800 font-[800] break-words mt-4 leading-tight">
-                {postData.title}
+                {postData?.title}
               </h2>
               <div className="flex gap-2 items-center">
                 {postData.tags.map((item: any, i: number) => (
@@ -145,7 +182,7 @@ function PostDetails() {
                 remarkPlugins={[remarkGfm]}
                 className="markdown-render"
               >
-                {postData.body}
+                {postData?.body}
               </ReactMarkdown>
             </div>
           </div>
