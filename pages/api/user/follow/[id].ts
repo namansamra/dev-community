@@ -26,10 +26,9 @@ const handlePut = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
   const { id } = req.query;
   try {
     const value = req.body.value;
-
     await prisma.user.update({
       where: {
-        email: req.user.email as string,
+        id: req.user.id,
       },
       data: {
         following: {
@@ -42,12 +41,12 @@ const handlePut = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
 
     res.status(200).json({
       status: 'success',
-      message: 'Post saved successfully!',
+      message: 'user followed successfully!',
     });
   } catch (error: any) {
     res.status(400).json({
       status: 'error',
-      message: 'Cannot fetch post!!',
+      message: 'Cannot perform action!!',
     });
   }
 };

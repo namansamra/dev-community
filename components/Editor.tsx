@@ -303,7 +303,7 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
             variant={'primary'}
             onClick={() =>
               mutate({
-                slug: 'new-post-' + Math.random() * 100,
+                slug: 'new-post' + Math.random() * 100,
                 title: title,
                 body: value,
                 coverImage: coverImageUrl,

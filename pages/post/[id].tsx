@@ -1,5 +1,10 @@
 import Header from '@/components/Header';
-import { getDetailedPost, likePost, savePost } from '@/lib/commonApi';
+import {
+  followUser,
+  getDetailedPost,
+  likePost,
+  savePost,
+} from '@/lib/commonApi';
 import { Button, Icon } from '@chakra-ui/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -20,10 +25,8 @@ function PostDetails() {
   const { id } = router.query;
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [isAuthorFollowed, setIsAuthorFollowed] = useState(false);
   const { session } = useSessionCustom();
-  console.log(id, 'id hu ');
-
-  console.log(session, 'user hu bhai in detailed post');
 
   const { isLoading, data, error, refetch } = useQuery(
     ['post-details', id],
@@ -31,6 +34,8 @@ function PostDetails() {
       return getDetailedPost(id as string);
     }
   );
+
+  const postData = data?.data?.data?.post;
 
   const { mutate: likePostHandler } = useMutation(
     'like-post',
@@ -54,7 +59,16 @@ function PostDetails() {
     }
   );
 
-  const postData = data?.data?.data?.post;
+  const { mutate: followUserHandler } = useMutation(
+    ['follow-user', postData?.authorId],
+    () =>
+      followUser(postData?.authorId as string, { value: !isAuthorFollowed }),
+    {
+      onSuccess: () => {
+        setIsAuthorFollowed((prev) => !prev);
+      },
+    }
+  );
 
   useEffect(() => {
     if (session?.user) {
@@ -73,8 +87,18 @@ function PostDetails() {
       if (userAlreadySaved) {
         setIsSaved(userAlreadySaved);
       }
+
+      const authorAlreadyFollowed = session?.user?.following?.some(
+        (userId: any) => userId == postData?.authorId
+      );
+
+      if (authorAlreadyFollowed) {
+        setIsAuthorFollowed(authorAlreadyFollowed);
+      }
     }
-  }, [session, id]);
+  }, [session, id, data?.data?.data?.post]);
+
+  console.log(postData);
 
   return (
     <div className="flex flex-col w-screen relative">
@@ -159,7 +183,7 @@ function PostDetails() {
                     {postData?.author?.name}
                   </span>
                   <span className="text-sm text-grey-400">
-                    posted on {new Date(postData.createdAt).toDateString()}
+                    posted on {new Date(postData?.createdAt).toDateString()}
                   </span>
                 </div>
               </div>
@@ -167,7 +191,7 @@ function PostDetails() {
                 {postData?.title}
               </h2>
               <div className="flex gap-2 items-center">
-                {postData.tags.map((item: any, i: number) => (
+                {postData?.tags?.map((item: any, i: number) => (
                   <Button
                     key={i}
                     variant="ghost"
@@ -200,9 +224,25 @@ function PostDetails() {
               </span>
             </div>
             <div className="flex flex-col gap-4 w-full mt-10">
-              <Button variant="primary" className="w-full">
-                Follow
-              </Button>
+              {postData?.authorId === session?.user?.id ? (
+                <Button
+                  variant={'primary'}
+                  className="w-full"
+                  onClick={() => {
+                    router.push('/profile');
+                  }}
+                >
+                  Edit Profile
+                </Button>
+              ) : (
+                <Button
+                  variant={isAuthorFollowed ? 'outline' : 'primary'}
+                  className="w-full"
+                  onClick={() => followUserHandler()}
+                >
+                  {isAuthorFollowed ? 'Following' : 'Follow'}
+                </Button>
+              )}
               <div className="text-grey-500 text-md">
                 {postData?.author?.bio}
               </div>
