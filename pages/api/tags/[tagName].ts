@@ -25,7 +25,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 const handleGet = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
   try {
     const { tagName } = req.query;
-    console.log(req.query);
     const tags = await prisma.tag.findMany({
       where: {
         name: {

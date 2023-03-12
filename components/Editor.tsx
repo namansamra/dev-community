@@ -17,6 +17,7 @@ import { useRouter } from 'next/router';
 import { useMutation, useQuery } from 'react-query';
 import { createPost } from '@/lib/commonApi';
 import { useSessionCustom } from '@/lib/next-auth-react-query';
+import AsyncSelect from './AsyncSelect';
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false });
 
 const insertToTextArea = (intsertString: string) => {
@@ -46,6 +47,7 @@ const uploadImageToServer = async (file: File) => {
     const formData = new FormData();
     formData.append('image', file);
     const res = await fetch('http://localhost:3000/api/upload/image', {
+      //***********to be changed */
       method: 'POST',
       body: formData,
     });
@@ -265,7 +267,8 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
               title={title}
               onChange={(e) => setTitle(e.target.value)}
             />
-            <Input variant={'unstyled'} placeholder="Add upto 4 tags..." />
+            {/* <Input variant={'unstyled'} placeholder="Add upto 4 tags..." /> */}
+            <AsyncSelect />
           </div>
 
           <div className="flex w-full relative">

@@ -9,3 +9,4 @@ export const savePost = (id: string | undefined, body: any) =>
   api.put(`/post/save/${id}`, body);
 export const followUser = (id: string | undefined, body: any) =>
   api.put(`/user/follow/${id}`, body);
+export const getTags = (input: string) => api.get(`/tags/${input}`);

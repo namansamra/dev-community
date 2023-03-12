@@ -50,6 +50,7 @@ const handlePost = async (
 
 const handleGet = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
   try {
+    console.log('yaha aaya hu');
     const tags = await prisma.tag.findMany({});
     res.status(200).json({
       status: 'success',
