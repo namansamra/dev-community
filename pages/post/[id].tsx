@@ -19,6 +19,8 @@ import Comment from '@/assets/images/comment.svg';
 import SavedFilled from '@/assets/images/save-filled.svg';
 import SavedEmpty from '@/assets/images/save.svg';
 import { useSessionCustom } from '@/lib/next-auth-react-query';
+import SingleComment from '@/components/Comment';
+import CommentRenderer from '@/components/Comment';
 
 function PostDetails() {
   const router = useRouter();
@@ -213,6 +215,34 @@ function PostDetails() {
                 {postData?.body}
               </ReactMarkdown>
             </div>
+
+            <CommentRenderer
+              comments={[
+                {
+                  content:
+                    'This is a great list. Will definitely be recommending it when I see someone asking for project inspiration. Nice work!',
+                  author: {
+                    name: 'Jake Lundberg',
+                    image:
+                      'https://res.cloudinary.com/practicaldev/image/fetch/s--Ws-h6h6W--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/user/profile_image/1023909/5de93336-e7ae-42db-858a-1a0cf3649995.png',
+                  },
+                  likes: 10,
+                  childComments: [
+                    {
+                      content:
+                        'This is a bad list. Will definitely be recommending it when I see someone asking for project inspiration. Nice work!',
+                      author: {
+                        name: 'Lake Jundberg',
+                        image:
+                          'https://res.cloudinary.com/practicaldev/image/fetch/s--Ws-h6h6W--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/user/profile_image/1023909/5de93336-e7ae-42db-858a-1a0cf3649995.png',
+                      },
+                      likes: 10,
+                      childComments: [],
+                    },
+                  ],
+                },
+              ]}
+            />
           </div>
           <div className="w-[350px] h-max hidden lg:block rounded-md border-[1px] border-grey-200 border-t-[40px] border-t-black relative p-6 pb-10 bg-grey-50">
             <div className="flex items-end gap-2 absolute top-[-10px] left-5">
