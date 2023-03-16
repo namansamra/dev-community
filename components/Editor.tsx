@@ -196,6 +196,7 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
   );
   const [title, setTitle] = useState('');
   const [coverImageUrl, setCoverImageUrl] = useState('');
+  const [userSelectedTags, setUserSelectedTags] = useState<String[]>([]);
 
   const { mutate, isLoading, error, data } = useMutation(
     'create-post',
@@ -268,7 +269,10 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
               onChange={(e) => setTitle(e.target.value)}
             />
             {/* <Input variant={'unstyled'} placeholder="Add upto 4 tags..." /> */}
-            <AsyncSelect />
+            <AsyncSelect
+              selectedTags={userSelectedTags}
+              setSelectedTags={setUserSelectedTags}
+            />
           </div>
 
           <div className="flex w-full relative">
@@ -310,6 +314,7 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
                 title: title,
                 body: value,
                 coverImage: coverImageUrl,
+                tags: userSelectedTags.map((i: any) => i.value),
               })
             }
             isLoading={isLoading}

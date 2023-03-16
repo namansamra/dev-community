@@ -22,4 +22,5 @@ export interface Post {
   authorId: string;
   author: Author;
   comments: any[];
+  tags: String[];
 }

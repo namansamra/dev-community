@@ -75,17 +75,15 @@ function Post({ postData }: { postData: Post }) {
             {postData.title}
           </h2>
           <Flex gap={'5px'}>
-            {Array(4)
-              .fill(-1)
-              .map((item, i) => (
-                <Button
-                  variant={'ghost'}
-                  key={i}
-                  className="p-1 h-max w-max text-sm border-[1px] border-grey-100 font-normal px-2"
-                >
-                  #React
-                </Button>
-              ))}
+            {postData.tags.map((tag, i) => (
+              <Button
+                variant={'ghost'}
+                key={i}
+                className="p-1 h-max w-max text-sm border-[1px] border-grey-100 font-normal px-2"
+              >
+                {tag}
+              </Button>
+            ))}
           </Flex>
 
           <Flex className="justify-between items-center">

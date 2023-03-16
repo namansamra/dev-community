@@ -5,6 +5,11 @@ import debounce from 'lodash/debounce';
 import { getTags } from '@/lib/commonApi';
 import { useQuery } from 'react-query';
 
+type Props = {
+  selectedTags: Array<String>;
+  setSelectedTags: React.Dispatch<React.SetStateAction<String[]>>;
+};
+
 export const reselectStyles = {
   control: (styles: object) => ({
     ...styles,
@@ -83,25 +88,33 @@ export const reselectStyles = {
 
 const getData = async (input: string, callback: any) => {
   if (input.length) {
-    const data = await getTags(input);
-    console.log(data);
-    callback(data);
+    const { data } = await getTags(input);
+    callback(data.data.tags);
   }
 };
 
-function AsyncSelect() {
+function AsyncSelect({ selectedTags, setSelectedTags }: Props) {
   const { data } = useQuery('get-default-tags', async () => {
     const res = await getTags('');
+    console.log(res, 'res hu');
     return res.data.data.tags.map((i: any) => {
-      return { label: i.name, value: i.name };
+      return { label: i.name, value: i.name, info: i.info };
     });
   });
 
+  console.log(selectedTags);
+
   const handleOptionSelect = (data: any) => {
     console.log(data);
+    setSelectedTags(
+      data.map((i: any) =>
+        i.value.includes('#')
+          ? i
+          : { label: `#${i.label}`, value: `#${i.value}` }
+      )
+    );
   };
   const debouncedGetCompany = debounce(getData, 1500);
-
   return (
     <div>
       <AsyncCreatableSelect
@@ -115,24 +128,30 @@ function AsyncSelect() {
             return <CustomOption props={props} />;
           },
         }}
+        value={selectedTags}
         placeholder="Add up to 4 Tags..."
         getOptionValue={(option: any) => option.label}
         loadOptions={debouncedGetCompany as any}
         formatCreateLabel={(input: string) => `#${input}`}
         defaultOptions={data}
         onChange={handleOptionSelect}
+        allowCreateWhileLoading
       />
     </div>
   );
 }
 const CustomOption = ({ props }: { props: any }) => {
+  console.log(props);
   return (
     <React.Fragment>
       <components.Option {...props}>
-        <div className="flex flex-col gap-2 w-full">
-          <span className="text-grey-800 p-2 font-serif text-lg">
-            {props.children.toLowerCase()}
+        <div className="flex flex-col gap-2 w-full p-2">
+          <span className="text-grey-800 text-sm font-bold font-mono">
+            {props?.children?.toLowerCase()}
           </span>
+          {props.data.value && (
+            <span className="text-xs">{props.data.info}</span>
+          )}
         </div>
       </components.Option>
     </React.Fragment>

@@ -5,7 +5,7 @@ import {
   likePost,
   savePost,
 } from '@/lib/commonApi';
-import { Button, Icon } from '@chakra-ui/react';
+import { Button, Flex, Icon } from '@chakra-ui/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import ReactMarkdown from 'react-markdown';
@@ -107,7 +107,11 @@ function PostDetails() {
         <div className="bg-black text-white text-2xl">Loading...</div>
       ) : (
         <div className="flex justify-between mt-[80px] sm:px-4 md:px-6 xl:mx-[80px] xl:px-0 gap-4">
-          <div className="flex-col h-max justify-center items-center gap-6 w-[50px] hidden sm:flex py-20">
+          <div
+            className={`flex-col h-max justify-center items-center gap-6 w-[50px] hidden sm:flex py-20 ${
+              postData.authorId === session?.user?.id ? 'invisible' : ''
+            }`}
+          >
             <Button
               onClick={() => likePostHandler()}
               variant={'unstyled'}
@@ -190,17 +194,17 @@ function PostDetails() {
               <h2 className="text-5xl text-grey-800 font-[800] break-words mt-4 leading-tight">
                 {postData?.title}
               </h2>
-              <div className="flex gap-2 items-center">
-                {postData?.tags?.map((item: any, i: number) => (
+              <Flex gap={'5px'}>
+                {postData.tags.map((tag: string, i: number) => (
                   <Button
+                    variant={'ghost'}
                     key={i}
-                    variant="ghost"
-                    className="text-grey-600 text-sm p-2 h-max font-normal"
+                    className="p-1 h-max w-max text-sm border-[1px] border-grey-100 font-normal px-2"
                   >
-                    #{item.name}
+                    {tag}
                   </Button>
                 ))}
-              </div>
+              </Flex>
               <ReactMarkdown
                 components={ChakraUIRenderer()}
                 remarkPlugins={[remarkGfm]}

@@ -36,7 +36,6 @@ const handleGet = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
       },
       include: {
         comments: true,
-        tags: true,
         likedBy: true,
         author: {
           select: {
