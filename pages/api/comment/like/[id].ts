@@ -1,7 +1,7 @@
 import prisma from '@/lib/prismadb';
 import withLoginOnly from '@/middlewares/withLogin';
 import { NextApiRequestWithUser } from '@/types';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiResponse } from 'next';
 
 async function handler(req: NextApiRequestWithUser, res: NextApiResponse) {
   const { method } = req;
@@ -26,7 +26,7 @@ const handlePut = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
   const { id } = req.query;
   try {
     const value = req.body.value;
-    const post = await prisma.post.update({
+    const comment = await prisma.comment.update({
       where: {
         id: id as string,
       },
@@ -46,12 +46,12 @@ const handlePut = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
           ...(value
             ? {
                 connect: {
-                  id: post.id,
+                  id: comment.id,
                 },
               }
             : {
                 disconnect: {
-                  id: post.id,
+                  id: comment.id,
                 },
               }),
         },
@@ -59,13 +59,13 @@ const handlePut = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
     });
     res.status(200).json({
       status: 'success',
-      message: 'Post liked successfully!',
+      message: 'Comment liked successfully!',
     });
   } catch (error: any) {
     console.log(error.message);
     res.status(400).json({
       status: 'error',
-      message: 'Cannot fetch post!!',
+      message: 'Cannot perform action!!',
     });
   }
 };

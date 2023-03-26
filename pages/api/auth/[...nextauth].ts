@@ -38,7 +38,6 @@ export const authOptions = {
               id: true,
             },
           },
-          likedComments: true,
         },
       });
       session.user = dbuser;

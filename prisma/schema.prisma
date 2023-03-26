@@ -23,8 +23,7 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -46,21 +45,20 @@ model VerificationToken {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  bio           String    @default("404 bio not found")
-  createdAt     DateTime  @default(now())
-  writtenPosts  Post[]    @relation("UserWrittenPosts")
-  likedPosts    Post[]
-  comments      Comment[] @relation("UserComments")
-  likedComments Comment[]
-  accounts      Account[]
-  sessions      Session[]
-  savedPostsId  String[]
-  following     String[]
+  id              String    @id @default(cuid())
+  name            String?
+  email           String?   @unique
+  emailVerified   DateTime?
+  image           String?
+  bio             String    @default("404 bio not found")
+  createdAt       DateTime  @default(now())
+  writtenPosts    Post[]    @relation("UserWrittenPosts")
+  writtenComments Comment[] @relation("UserWrittenComments")
+  likedPosts      Post[]
+  accounts        Account[]
+  sessions        Session[]
+  savedPostsId    String[]
+  following       String[]
 }
 
 model Post {
@@ -88,12 +86,12 @@ model Tag {
 model Comment {
   id              String    @id @default(cuid())
   content         String
-  author          User?     @relation("UserComments", fields: [authorId], references: [id])
-  authorId        String?
-  Post            Post[]
-  likes           Int
+  author          User      @relation("UserWrittenComments", fields: [authorId], references: [id])
+  authorId        String
+  likes           Int       @default(0)
   parentComment   Comment?  @relation("CommentParentComments", fields: [parentCommentId], references: [id])
   parentCommentId String?
   childComments   Comment[] @relation("CommentParentComments")
-  likedBy         User[]
+  Post            Post      @relation(fields: [postId], references: [id])
+  postId          String
 }

@@ -26,6 +26,24 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
+//nested comments level
+const recursive = (level: number): object => {
+  if (level === 0) {
+    return {
+      include: {
+        author: true,
+        childComments: true,
+      },
+    };
+  }
+  return {
+    include: {
+      author: true,
+      childComments: recursive(level - 1),
+    },
+  };
+};
+
 const handleGet = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
   try {
     const { id } = req.query;
@@ -35,7 +53,15 @@ const handleGet = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
         id: id as string,
       },
       include: {
-        comments: true,
+        comments: {
+          where: {
+            parentCommentId: null,
+          },
+          include: {
+            author: true,
+            childComments: recursive(10),
+          },
+        },
         likedBy: true,
         author: {
           select: {

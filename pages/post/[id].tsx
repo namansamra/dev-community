@@ -19,7 +19,6 @@ import Comment from '@/assets/images/comment.svg';
 import SavedFilled from '@/assets/images/save-filled.svg';
 import SavedEmpty from '@/assets/images/save.svg';
 import { useSessionCustom } from '@/lib/next-auth-react-query';
-import SingleComment from '@/components/Comment';
 import CommentRenderer from '@/components/Comment';
 
 function PostDetails() {
@@ -38,6 +37,8 @@ function PostDetails() {
   );
 
   const postData = data?.data?.data?.post;
+
+  console.log(postData, isLoading, '************************************');
 
   const { mutate: likePostHandler } = useMutation(
     'like-post',
@@ -111,7 +112,7 @@ function PostDetails() {
         <div className="flex justify-between mt-[80px] sm:px-4 md:px-6 xl:mx-[80px] xl:px-0 gap-4">
           <div
             className={`flex-col h-max justify-center items-center gap-6 w-[50px] hidden sm:flex py-20 ${
-              postData.authorId === session?.user?.id ? 'invisible' : ''
+              postData?.authorId === session?.user?.id ? 'invisible' : ''
             }`}
           >
             <Button
@@ -197,7 +198,7 @@ function PostDetails() {
                 {postData?.title}
               </h2>
               <Flex gap={'5px'}>
-                {postData.tags.map((tag: string, i: number) => (
+                {postData?.tags?.map((tag: string, i: number) => (
                   <Button
                     variant={'ghost'}
                     key={i}
@@ -217,31 +218,8 @@ function PostDetails() {
             </div>
 
             <CommentRenderer
-              comments={[
-                {
-                  content:
-                    'This is a great list. Will definitely be recommending it when I see someone asking for project inspiration. Nice work!',
-                  author: {
-                    name: 'Jake Lundberg',
-                    image:
-                      'https://res.cloudinary.com/practicaldev/image/fetch/s--Ws-h6h6W--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/user/profile_image/1023909/5de93336-e7ae-42db-858a-1a0cf3649995.png',
-                  },
-                  likes: 10,
-                  childComments: [
-                    {
-                      content:
-                        'This is a bad list. Will definitely be recommending it when I see someone asking for project inspiration. Nice work!',
-                      author: {
-                        name: 'Lake Jundberg',
-                        image:
-                          'https://res.cloudinary.com/practicaldev/image/fetch/s--Ws-h6h6W--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/user/profile_image/1023909/5de93336-e7ae-42db-858a-1a0cf3649995.png',
-                      },
-                      likes: 10,
-                      childComments: [],
-                    },
-                  ],
-                },
-              ]}
+              comments={postData?.comments}
+              postId={postData?.id}
             />
           </div>
           <div className="w-[350px] h-max hidden lg:block rounded-md border-[1px] border-grey-200 border-t-[40px] border-t-black relative p-6 pb-10 bg-grey-50">

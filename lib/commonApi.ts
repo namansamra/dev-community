@@ -10,3 +10,8 @@ export const savePost = (id: string | undefined, body: any) =>
 export const followUser = (id: string | undefined, body: any) =>
   api.put(`/user/follow/${id}`, body);
 export const getTags = (input: string) => api.get(`/tags/${input}`);
+
+export const createComment = (body: any) => api.post(`/comment`, body);
+export const likeComment = (id: string | undefined, body: any) =>
+  api.put(`/comment/like/${id}`, body);
+export const deleteComment = (id: string) => api.delete(`/comment/${id}`);
