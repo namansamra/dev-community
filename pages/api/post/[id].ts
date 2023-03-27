@@ -47,7 +47,6 @@ const recursive = (level: number): object => {
 const handleGet = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
   try {
     const { id } = req.query;
-    console.log(req.query);
     const post = await prisma.post.findFirst({
       where: {
         id: id as string,

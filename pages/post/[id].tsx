@@ -168,7 +168,7 @@ function PostDetails() {
               {postData?.saved}
             </Button>
           </div>
-          <div className="flex-1 w-full lg:w-[650px] border-[1px] border-grey-300 rounded-lg bg-white">
+          <div className="flex-1 w-full lg:w-[650px] border-[1px] border-grey-300 rounded-lg bg-white pb-10">
             <Image
               src={postData?.coverImage}
               alt={'cover-image'}
@@ -202,7 +202,7 @@ function PostDetails() {
                   <Button
                     variant={'ghost'}
                     key={i}
-                    className="p-1 h-max w-max text-sm border-[1px] border-grey-100 font-normal px-2"
+                    className="p-1 h-max w-max text-sm border-[1px] border-grey-100 font-normal px-2 my-2"
                   >
                     {tag}
                   </Button>
@@ -216,10 +216,10 @@ function PostDetails() {
                 {postData?.body}
               </ReactMarkdown>
             </div>
-
             <CommentRenderer
               comments={postData?.comments}
               postId={postData?.id}
+              userImageLink={session?.user?.image}
             />
           </div>
           <div className="w-[350px] h-max hidden lg:block rounded-md border-[1px] border-grey-200 border-t-[40px] border-t-black relative p-6 pb-10 bg-grey-50">

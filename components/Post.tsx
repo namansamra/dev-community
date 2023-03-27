@@ -58,11 +58,11 @@ function Post({ postData }: { postData: Post }) {
           <VStack alignItems={'start'}>
             <Button
               variant={'ghost'}
-              className="text-sm text-grey-800 m-0 p-0 h-max"
+              className="text-sm text-grey-800 m-0 p-0 h-max px-2"
             >
               {postData.author.name}
             </Button>
-            <span className="text-grey-500 text-xs !mt-0">
+            <span className="text-grey-500 text-xs !mt-0 px-2">
               {new Date(postData.createdAt).toDateString()}
             </span>
           </VStack>
