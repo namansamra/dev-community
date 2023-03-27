@@ -19,7 +19,7 @@ import Comment from '@/assets/images/comment.svg';
 import SavedFilled from '@/assets/images/save-filled.svg';
 import SavedEmpty from '@/assets/images/save.svg';
 import { useSessionCustom } from '@/lib/next-auth-react-query';
-import CommentRenderer from '@/components/Comment';
+import CommentSection from '@/components/Comment';
 
 function PostDetails() {
   const router = useRouter();
@@ -216,7 +216,7 @@ function PostDetails() {
                 {postData?.body}
               </ReactMarkdown>
             </div>
-            <CommentRenderer
+            <CommentSection
               comments={postData?.comments}
               postId={postData?.id}
               userImageLink={session?.user?.image}

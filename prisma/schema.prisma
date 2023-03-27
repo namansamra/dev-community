@@ -58,6 +58,7 @@ model User {
   accounts        Account[]
   sessions        Session[]
   savedPostsId    String[]
+  likedCommentsId String[]
   following       String[]
 }
 

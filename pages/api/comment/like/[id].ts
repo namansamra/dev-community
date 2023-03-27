@@ -26,7 +26,9 @@ const handlePut = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
   const { id } = req.query;
   try {
     const value = req.body.value;
-    const comment = await prisma.comment.update({
+    console.log(id, value);
+    console.log(req.user.likedCommentsId);
+    const c = await prisma.comment.update({
       where: {
         id: id as string,
       },
@@ -37,23 +39,17 @@ const handlePut = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
       },
     });
 
+    console.log(c, 'commetn hu');
+
     await prisma.user.update({
       where: {
         email: req.user.email as string,
       },
       data: {
-        likedPosts: {
-          ...(value
-            ? {
-                connect: {
-                  id: comment.id,
-                },
-              }
-            : {
-                disconnect: {
-                  id: comment.id,
-                },
-              }),
+        likedCommentsId: {
+          set: value
+            ? [...req.user.likedCommentsId, id]
+            : req.user.likedCommentsId.filter((i: string) => i == id),
         },
       },
     });

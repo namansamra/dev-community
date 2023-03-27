@@ -1,12 +1,12 @@
 import { Button, HStack, Input, Textarea } from '@chakra-ui/react';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import HeartEmpty from '@/assets/images/heart.svg';
 import HeartFilled from '@/assets/images/heart-filled.svg';
 import Comment from '@/assets/images/comment.svg';
-import { useSessionCustom } from '@/lib/next-auth-react-query';
 import { useMutation, useQueryClient } from 'react-query';
-import { createComment } from '@/lib/commonApi';
+import { createComment, likeComment } from '@/lib/commonApi';
+import { useSessionCustom } from '@/lib/next-auth-react-query';
 
 type Props = {
   commentData: any;
@@ -78,10 +78,20 @@ const CommentInputField = ({
 };
 
 function SingleComment({ commentData, postId }: Props) {
+  const { session } = useSessionCustom();
   const [isLiked, setIsLiked] = useState(false);
   const [showInput, setShowInput] = useState(false);
   const [replyText, setReplyText] = useState('');
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (session?.user) {
+      setIsLiked(
+        session.user.likedCommentsId.some((i: string) => i == commentData.id)
+      );
+    }
+  }, [session?.user, commentData.id]);
+
   const { mutate: submitReplyHandler } = useMutation(
     'create-reply-comment',
     createComment,
@@ -93,7 +103,16 @@ function SingleComment({ commentData, postId }: Props) {
       },
     }
   );
-  console.log(showInput, 'show input hu bhai');
+  const { mutate: likeCommentHandler } = useMutation(
+    'like-comment',
+    () => likeComment(commentData?.id, { value: !isLiked }),
+    {
+      onSuccess: () => {
+        queryClient.refetchQueries('post-details');
+        setIsLiked((prev) => !prev);
+      },
+    }
+  );
   return (
     <div className="flex gap-2 w-full items-start p-4 py-2">
       <Image
@@ -132,7 +151,9 @@ function SingleComment({ commentData, postId }: Props) {
                   />
                 }
                 variant="ghost"
-                onClick={() => {}}
+                onClick={() => {
+                  likeCommentHandler();
+                }}
               >
                 {commentData.likes}
                 <span className="hidden md:block ml-1">Likes</span>
