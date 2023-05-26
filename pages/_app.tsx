@@ -8,6 +8,7 @@ import chakraTheme from '../styles/chakraTheme';
 import { useSessionCustom } from '@/lib/next-auth-react-query';
 import { ReactNode } from 'react';
 import type { NextComponentType } from 'next';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 //Add custom appProp type then use union to add it
 type CustomAppProps = AppProps & {
@@ -33,6 +34,7 @@ export default function App({ Component, pageProps }: CustomAppProps) {
   });
   return (
     <QueryClientProvider client={client}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <CacheProvider value={emotionCache}>
         <ChakraProvider theme={chakraTheme}>
           {Component.auth ? (
@@ -51,7 +53,6 @@ export default function App({ Component, pageProps }: CustomAppProps) {
 function Auth({ children }: { children: ReactNode }) {
   // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
   const { session, status } = useSessionCustom({ required: true });
-  console.log(session, 'heloooi');
   if (status === 'loading') {
     return <div>Loading...</div>;
   }

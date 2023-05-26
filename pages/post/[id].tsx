@@ -1,25 +1,25 @@
-import Header from '@/components/Header';
+import Header from "@/components/Header";
 import {
   followUser,
   getDetailedPost,
   likePost,
   savePost,
-} from '@/lib/commonApi';
-import { Button, Flex, Icon } from '@chakra-ui/react';
-import Image from 'next/image';
-import { useRouter } from 'next/router';
-import ReactMarkdown from 'react-markdown';
-import { useMutation, useQuery } from 'react-query';
-import ChakraUIRenderer from 'chakra-ui-markdown-renderer';
-import remarkGfm from 'remark-gfm';
-import { useEffect, useState } from 'react';
-import HeartFilled from '@/assets/images/heart-filled.svg';
-import HeartEmpty from '@/assets/images/heart.svg';
-import Comment from '@/assets/images/comment.svg';
-import SavedFilled from '@/assets/images/save-filled.svg';
-import SavedEmpty from '@/assets/images/save.svg';
-import { useSessionCustom } from '@/lib/next-auth-react-query';
-import CommentSection from '@/components/Comment';
+} from "@/lib/commonApi";
+import { Button, Flex, Icon } from "@chakra-ui/react";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import ReactMarkdown from "react-markdown";
+import { useMutation, useQuery } from "react-query";
+import ChakraUIRenderer from "chakra-ui-markdown-renderer";
+import remarkGfm from "remark-gfm";
+import { useEffect, useState } from "react";
+import HeartFilled from "@/assets/images/heart-filled.svg";
+import HeartEmpty from "@/assets/images/heart.svg";
+import Comment from "@/assets/images/comment.svg";
+import SavedFilled from "@/assets/images/save-filled.svg";
+import SavedEmpty from "@/assets/images/save.svg";
+import { useSessionCustom } from "@/lib/next-auth-react-query";
+import CommentSection from "@/components/Comment";
 
 function PostDetails() {
   const router = useRouter();
@@ -30,7 +30,7 @@ function PostDetails() {
   const { session } = useSessionCustom();
 
   const { isLoading, data, error, refetch } = useQuery(
-    ['post-details', id],
+    ["post-details", id],
     () => {
       return getDetailedPost(id as string);
     }
@@ -38,10 +38,8 @@ function PostDetails() {
 
   const postData = data?.data?.data?.post;
 
-  console.log(postData, isLoading, '************************************');
-
   const { mutate: likePostHandler } = useMutation(
-    'like-post',
+    "like-post",
     () => likePost(id as string, { value: !isLiked }),
     {
       onSuccess: () => {
@@ -52,7 +50,7 @@ function PostDetails() {
   );
 
   const { mutate: savePostHandler } = useMutation(
-    ['save-post', id],
+    ["save-post", id],
     () => savePost(id as string, { value: !isSaved }),
     {
       onSuccess: () => {
@@ -63,7 +61,7 @@ function PostDetails() {
   );
 
   const { mutate: followUserHandler } = useMutation(
-    ['follow-user', postData?.authorId],
+    ["follow-user", postData?.authorId],
     () =>
       followUser(postData?.authorId as string, { value: !isAuthorFollowed }),
     {
@@ -85,7 +83,7 @@ function PostDetails() {
       const userAlreadySaved = session?.user?.savedPostsId?.some(
         (postId: any) => postId == id
       );
-      console.log(userAlreadySaved, 'save hu');
+      console.log(userAlreadySaved, "save hu");
 
       if (userAlreadySaved) {
         setIsSaved(userAlreadySaved);
@@ -101,7 +99,7 @@ function PostDetails() {
     }
   }, [session, id, data?.data?.data?.post]);
 
-  console.log(postData);
+  console.log(postData, "pos ddata ");
 
   return (
     <div className="flex flex-col w-screen relative">
@@ -112,12 +110,12 @@ function PostDetails() {
         <div className="flex justify-between mt-[80px] sm:px-4 md:px-6 xl:mx-[80px] xl:px-0 gap-4">
           <div
             className={`flex-col h-max justify-center items-center gap-6 w-[50px] hidden sm:flex py-20 ${
-              postData?.authorId === session?.user?.id ? 'invisible' : ''
+              postData?.authorId === session?.user?.id ? "invisible" : ""
             }`}
           >
             <Button
               onClick={() => likePostHandler()}
-              variant={'unstyled'}
+              variant={"unstyled"}
               className="text-sm text-grey-500 flex-col justify-center items-center "
             >
               {isLiked ? (
@@ -139,14 +137,14 @@ function PostDetails() {
             </Button>
             <Button
               onClick={() => setIsLiked((prev) => !prev)}
-              variant={'unstyled'}
+              variant={"unstyled"}
               className="text-sm text-grey-500 flex-col justify-center items-center "
             >
               <Image src={Comment} width={25} height={25} alt="comment" />
               {postData?.comments?.length}
             </Button>
             <Button
-              variant={'unstyled'}
+              variant={"unstyled"}
               onClick={() => savePostHandler()}
               className="text-sm text-grey-500 flex-col justify-center items-center "
             >
@@ -169,13 +167,15 @@ function PostDetails() {
             </Button>
           </div>
           <div className="flex-1 w-full lg:w-[650px] border-[1px] border-grey-300 rounded-lg bg-white pb-10">
-            <Image
-              src={postData?.coverImage}
-              alt={'cover-image'}
-              className="w-full rounded-t-md h-[350px]"
-              width={800}
-              height={350}
-            />
+            {postData?.coverImage && (
+              <Image
+                src={postData?.coverImage}
+                alt={"cover-image"}
+                className="w-full rounded-t-md h-[350px]"
+                width={800}
+                height={350}
+              />
+            )}
             <div className="flex flex-col w-full px-16 py-8">
               <div className="w-full flex gap-2">
                 <Image
@@ -197,10 +197,10 @@ function PostDetails() {
               <h2 className="text-5xl text-grey-800 font-[800] break-words mt-4 leading-tight">
                 {postData?.title}
               </h2>
-              <Flex gap={'5px'}>
+              <Flex gap={"5px"}>
                 {postData?.tags?.map((tag: string, i: number) => (
                   <Button
-                    variant={'ghost'}
+                    variant={"ghost"}
                     key={i}
                     className="p-1 h-max w-max text-sm border-[1px] border-grey-100 font-normal px-2 my-2"
                   >
@@ -238,21 +238,21 @@ function PostDetails() {
             <div className="flex flex-col gap-4 w-full mt-10">
               {postData?.authorId === session?.user?.id ? (
                 <Button
-                  variant={'primary'}
+                  variant={"primary"}
                   className="w-full"
                   onClick={() => {
-                    router.push('/profile');
+                    router.push("/profile");
                   }}
                 >
                   Edit Profile
                 </Button>
               ) : (
                 <Button
-                  variant={isAuthorFollowed ? 'outline' : 'primary'}
+                  variant={isAuthorFollowed ? "outline" : "primary"}
                   className="w-full"
                   onClick={() => followUserHandler()}
                 >
-                  {isAuthorFollowed ? 'Following' : 'Follow'}
+                  {isAuthorFollowed ? "Following" : "Follow"}
                 </Button>
               )}
               <div className="text-grey-500 text-md">

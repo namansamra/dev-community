@@ -60,6 +60,9 @@ const handleGet = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
             author: true,
             childComments: recursive(10),
           },
+          orderBy: {
+            createdAt: 'desc',
+          },
         },
         likedBy: true,
         author: {

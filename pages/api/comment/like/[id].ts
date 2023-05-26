@@ -1,16 +1,16 @@
-import prisma from '@/lib/prismadb';
-import withLoginOnly from '@/middlewares/withLogin';
-import { NextApiRequestWithUser } from '@/types';
-import { NextApiResponse } from 'next';
+import prisma from "@/lib/prismadb";
+import withLoginOnly from "@/middlewares/withLogin";
+import { NextApiRequestWithUser } from "@/types";
+import { NextApiResponse } from "next";
 
 async function handler(req: NextApiRequestWithUser, res: NextApiResponse) {
   const { method } = req;
   try {
     switch (method) {
-      case 'PUT':
+      case "PUT":
         return await withLoginOnly(req, res, handlePut);
       default:
-        res.setHeader('Allow', 'PUT');
+        res.setHeader("Allow", "PUT");
         throw new Error(`Method ${method} Not Allowed`);
     }
   } catch (error: any) {
@@ -26,8 +26,7 @@ const handlePut = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
   const { id } = req.query;
   try {
     const value = req.body.value;
-    console.log(id, value);
-    console.log(req.user.likedCommentsId);
+    console.log("value", id, value);
     const c = await prisma.comment.update({
       where: {
         id: id as string,
@@ -39,7 +38,7 @@ const handlePut = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
       },
     });
 
-    console.log(c, 'commetn hu');
+    console.log(c, "commetn hu");
 
     await prisma.user.update({
       where: {
@@ -49,19 +48,19 @@ const handlePut = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
         likedCommentsId: {
           set: value
             ? [...req.user.likedCommentsId, id]
-            : req.user.likedCommentsId.filter((i: string) => i == id),
+            : req.user.likedCommentsId.filter((i: string) => i !== id),
         },
       },
     });
     res.status(200).json({
-      status: 'success',
-      message: 'Comment liked successfully!',
+      status: "success",
+      message: "Comment liked successfully!",
     });
   } catch (error: any) {
     console.log(error.message);
     res.status(400).json({
-      status: 'error',
-      message: 'Cannot perform action!!',
+      status: "error",
+      message: "Cannot perform action!!",
     });
   }
 };

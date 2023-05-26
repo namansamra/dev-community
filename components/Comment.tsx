@@ -1,12 +1,12 @@
-import { Button, HStack, Input, Textarea } from '@chakra-ui/react';
-import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
-import HeartEmpty from '@/assets/images/heart.svg';
-import HeartFilled from '@/assets/images/heart-filled.svg';
-import Comment from '@/assets/images/comment.svg';
-import { useMutation, useQueryClient } from 'react-query';
-import { createComment, likeComment } from '@/lib/commonApi';
-import { useSessionCustom } from '@/lib/next-auth-react-query';
+import { Button, HStack, Input, Textarea } from "@chakra-ui/react";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
+import HeartEmpty from "@/assets/images/heart.svg";
+import HeartFilled from "@/assets/images/heart-filled.svg";
+import Comment from "@/assets/images/comment.svg";
+import { useMutation, useQueryClient } from "react-query";
+import { createComment, likeComment } from "@/lib/commonApi";
+import { useSessionCustom } from "@/lib/next-auth-react-query";
 
 type Props = {
   commentData: any;
@@ -29,23 +29,23 @@ type CommentInputProps = {
 };
 
 const CommentInputField = ({
-  value = '',
+  value = "",
   setValue = () => {},
   onSubmit = () => {},
   onCancel = () => {},
-  userImageLink = '',
-  placeHolder = 'Reply...',
+  userImageLink = "",
+  placeHolder = "Reply...",
 }: CommentInputProps) => {
   return (
     <div className="flex gap-4 w-full">
       {userImageLink && (
         <Image
           src={userImageLink}
-          alt={'comment-author'}
+          alt={"comment-author"}
           height={40}
           width={40}
           className="rounded-full h-[40px] w-[40px] mt-4 "
-          style={{ border: '1px solid #e9e9e9' }}
+          style={{ border: "1px solid #e9e9e9" }}
         />
       )}
       <div className="flex flex-col gap-2 w-full">
@@ -81,35 +81,42 @@ function SingleComment({ commentData, postId }: Props) {
   const { session } = useSessionCustom();
   const [isLiked, setIsLiked] = useState(false);
   const [showInput, setShowInput] = useState(false);
-  const [replyText, setReplyText] = useState('');
+  const [replyText, setReplyText] = useState("");
   const queryClient = useQueryClient();
 
   useEffect(() => {
+    console.log(
+      session,
+      "heeello",
+      commentData,
+      session?.user?.likedCommentsId?.some((i: string) => i == commentData.id)
+    );
     if (session?.user) {
       setIsLiked(
         session.user.likedCommentsId.some((i: string) => i == commentData.id)
       );
     }
-  }, [session?.user, commentData.id]);
+  }, [session?.user?.likedCommentsId, commentData]);
 
   const { mutate: submitReplyHandler } = useMutation(
-    'create-reply-comment',
+    "create-reply-comment",
     createComment,
     {
       onSuccess: () => {
-        queryClient.refetchQueries('post-details');
-        setReplyText('');
+        queryClient.invalidateQueries(["post-details", postId]);
+        setReplyText("");
         setShowInput(false);
       },
     }
   );
   const { mutate: likeCommentHandler } = useMutation(
-    'like-comment',
+    "like-comment",
     () => likeComment(commentData?.id, { value: !isLiked }),
     {
       onSuccess: () => {
-        queryClient.refetchQueries('post-details');
-        setIsLiked((prev) => !prev);
+        queryClient.invalidateQueries(["post-details", postId]);
+        queryClient.invalidateQueries("session");
+        setIsLiked(!isLiked);
       },
     }
   );
@@ -117,17 +124,17 @@ function SingleComment({ commentData, postId }: Props) {
     <div className="flex gap-2 w-full items-start p-4 py-2">
       <Image
         src={commentData?.author?.image}
-        alt={'comment-author'}
+        alt={"comment-author"}
         height={40}
         width={40}
         className="rounded-full h-[40px] w-[40px] mt-4 "
-        style={{ border: '1px solid #e9e9e9' }}
+        style={{ border: "1px solid #e9e9e9" }}
       />
       <div className="flex flex-col w-full gap-2 bg-white">
         <div className="flex flex-col gap-2 w-full ">
           <div className="flex flex-col gap-2 w-full border-[1px] rounded-md border-grey-200 p-4 relative">
             <Button
-              variant={'ghost'}
+              variant={"ghost"}
               onClick={() => {}}
               className="text-base text-grey-900 w-max p-1 h-max"
             >
@@ -212,15 +219,15 @@ function CommentRenderer({ comments, postId }: CommentsProps) {
 }
 
 function CommentSection({ comments, postId, userImageLink }: CommentsProps) {
-  const [commentValue, setCommentValue] = useState('');
+  const [commentValue, setCommentValue] = useState("");
   const queryClient = useQueryClient();
   const { mutate: submitComment } = useMutation(
-    'create-main-comment',
+    "create-main-comment",
     createComment,
     {
       onSuccess: () => {
-        queryClient.refetchQueries('post-details');
-        setCommentValue('');
+        queryClient.invalidateQueries(["post-details", postId]);
+        setCommentValue("");
       },
     }
   );

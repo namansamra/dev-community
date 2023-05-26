@@ -1,15 +1,15 @@
-import { Button, Flex, HStack, VStack } from '@chakra-ui/react';
-import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
-import HeartEmpty from '@/assets/images/heart.svg';
-import Comment from '@/assets/images/comment.svg';
-import SavedFilled from '@/assets/images/save-filled.svg';
-import SavedEmpty from '@/assets/images/save.svg';
-import { Post } from '@/types';
-import { useRouter } from 'next/router';
-import { useSessionCustom } from '@/lib/next-auth-react-query';
-import { useMutation } from 'react-query';
-import { savePost } from '@/lib/commonApi';
+import { Button, Flex, HStack, VStack } from "@chakra-ui/react";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
+import HeartEmpty from "@/assets/images/heart.svg";
+import Comment from "@/assets/images/comment.svg";
+import SavedFilled from "@/assets/images/save-filled.svg";
+import SavedEmpty from "@/assets/images/save.svg";
+import { Post } from "@/types";
+import { useRouter } from "next/router";
+import { useSessionCustom } from "@/lib/next-auth-react-query";
+import { useMutation } from "react-query";
+import { savePost } from "@/lib/commonApi";
 
 function Post({ postData }: { postData: Post }) {
   const router = useRouter();
@@ -26,7 +26,7 @@ function Post({ postData }: { postData: Post }) {
   }, [postData, user?.savedPostsId]);
 
   const { mutate: savePostHandler } = useMutation(
-    ['save-post', postData.id],
+    ["save-post", postData.id],
     (e: any) => savePost(postData.id, { value: !isSaved }),
     {
       onSuccess: () => {
@@ -40,9 +40,9 @@ function Post({ postData }: { postData: Post }) {
       {postData.coverImage && (
         <Image
           src={postData.coverImage}
-          alt={'post-image'}
+          alt={"post-image"}
           width="650"
-          height={'275'}
+          height={"275"}
           className="rounded-md rounded-b-none w-full"
         />
       )}
@@ -51,13 +51,13 @@ function Post({ postData }: { postData: Post }) {
           <Image
             src={postData.author.image}
             height="32"
-            width={'32'}
+            width={"32"}
             alt="user-image"
             className="rounded-full"
           />
-          <VStack alignItems={'start'}>
+          <VStack alignItems={"start"}>
             <Button
-              variant={'ghost'}
+              variant={"ghost"}
               className="text-sm text-grey-800 m-0 p-0 h-max px-2"
             >
               {postData.author.name}
@@ -74,10 +74,10 @@ function Post({ postData }: { postData: Post }) {
           >
             {postData.title}
           </h2>
-          <Flex gap={'5px'}>
+          <Flex gap={"5px"}>
             {postData.tags.map((tag, i) => (
               <Button
-                variant={'ghost'}
+                variant={"ghost"}
                 key={i}
                 className="p-1 h-max w-max text-sm border-[1px] border-grey-100 font-normal px-2"
               >
@@ -102,7 +102,7 @@ function Post({ postData }: { postData: Post }) {
                 variant="ghost"
                 onClick={handleActionButtons}
               >
-                {postData.likes}{' '}
+                {postData.likes}{" "}
                 <span className="hidden md:block ml-1">Reactions</span>
               </Button>
               <Button
@@ -126,7 +126,7 @@ function Post({ postData }: { postData: Post }) {
 
             <HStack>
               <span className="text-grey-600 text-xs">4 min read</span>
-              <Button variant={'ghost'} p="2" onClick={savePostHandler}>
+              <Button variant={"ghost"} p="2" onClick={savePostHandler}>
                 {isSaved ? (
                   <Image
                     src={SavedFilled}

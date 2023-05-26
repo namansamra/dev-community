@@ -86,6 +86,7 @@ model Tag {
 
 model Comment {
   id              String    @id @default(cuid())
+  createdAt       DateTime  @default(now())
   content         String
   author          User      @relation("UserWrittenComments", fields: [authorId], references: [id])
   authorId        String

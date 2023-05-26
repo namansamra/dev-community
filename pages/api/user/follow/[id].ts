@@ -34,7 +34,7 @@ const handlePut = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
         following: {
           ...(value
             ? { push: id }
-            : { set: req.user.following.filter((i: any) => i == id) }),
+            : { set: req.user.following.filter((i: any) => i !== id) }),
         },
       },
     });

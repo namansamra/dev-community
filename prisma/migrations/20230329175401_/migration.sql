@@ -43,6 +43,7 @@ CREATE TABLE "User" (
     "bio" TEXT NOT NULL DEFAULT '404 bio not found',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "savedPostsId" TEXT[],
+    "likedCommentsId" TEXT[],
     "following" TEXT[],
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -76,6 +77,7 @@ CREATE TABLE "Tag" (
 -- CreateTable
 CREATE TABLE "Comment" (
     "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "content" TEXT NOT NULL,
     "authorId" TEXT NOT NULL,
     "likes" INTEGER NOT NULL DEFAULT 0,

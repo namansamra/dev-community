@@ -1,8 +1,8 @@
-import NextAuth, { CallbacksOptions, SessionOptions } from 'next-auth';
-import GitHubProvider from 'next-auth/providers/github';
-import GoogleProvider from 'next-auth/providers/google';
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import prisma from '../../../lib/prismadb';
+import NextAuth, { CallbacksOptions, SessionOptions } from "next-auth";
+import GitHubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import prisma from "../../../lib/prismadb";
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
@@ -20,8 +20,8 @@ export const authOptions = {
   ],
   secret: process.env.JWT_SECRET,
   pages: {
-    signIn: '/enter',
-    newUser: '/enter?state=newuser',
+    signIn: "/enter",
+    newUser: "/enter?state=newuser",
   },
   callbacks: {
     async session({ session }: any) {
