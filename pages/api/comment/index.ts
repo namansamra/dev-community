@@ -5,7 +5,6 @@ import withLoginOnly from "@/middlewares/withLogin";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req;
-  console.log("hdasdasdasdasdasd");
   try {
     switch (method) {
       case "POST":
@@ -31,16 +30,12 @@ const handlePost = async (
 ) => {
   try {
     const { body } = req;
-    console.log(req.body, "the repoop");
     const comment = await prisma.comment.create({
       data: {
         ...body,
         authorId: req.user.id,
       },
     });
-
-    // console.log(parentCommentId, 'praerentt is hu bhai');
-
     res.status(201).json({
       status: "success",
       data: null,

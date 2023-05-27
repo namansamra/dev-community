@@ -85,12 +85,6 @@ function SingleComment({ commentData, postId }: Props) {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    console.log(
-      session,
-      "heeello",
-      commentData,
-      session?.user?.likedCommentsId?.some((i: string) => i == commentData.id)
-    );
     if (session?.user) {
       setIsLiked(
         session.user.likedCommentsId.some((i: string) => i == commentData.id)

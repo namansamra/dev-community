@@ -26,7 +26,6 @@ const handlePut = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
   const { id } = req.query;
   try {
     const value = req.body.value;
-    console.log("value", id, value);
     const c = await prisma.comment.update({
       where: {
         id: id as string,
@@ -37,8 +36,6 @@ const handlePut = async (req: NextApiRequestWithUser, res: NextApiResponse) => {
         },
       },
     });
-
-    console.log(c, "commetn hu");
 
     await prisma.user.update({
       where: {

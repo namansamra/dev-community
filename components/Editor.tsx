@@ -4,24 +4,24 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from 'react';
-import '@uiw/react-md-editor/markdown-editor.css';
-import '@uiw/react-markdown-preview/markdown.css';
-import dynamic from 'next/dynamic';
-import { Button, Input } from '@chakra-ui/react';
-import Image from 'next/image';
-import DEVLogo from '@/assets/images/dev-general-icon.png';
-import UploadImage from '@/assets/images/image.svg';
-import { IoMdClose } from 'react-icons/io';
-import { useRouter } from 'next/router';
-import { useMutation, useQuery } from 'react-query';
-import { createPost } from '@/lib/commonApi';
-import { useSessionCustom } from '@/lib/next-auth-react-query';
-import AsyncSelect from './AsyncSelect';
-const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false });
+} from "react";
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
+import dynamic from "next/dynamic";
+import { Button, Input } from "@chakra-ui/react";
+import Image from "next/image";
+import DEVLogo from "@/assets/images/dev-general-icon.png";
+import UploadImage from "@/assets/images/image.svg";
+import { IoMdClose } from "react-icons/io";
+import { useRouter } from "next/router";
+import { useMutation, useQuery } from "react-query";
+import { createPost } from "@/lib/commonApi";
+import { useSessionCustom } from "@/lib/next-auth-react-query";
+import AsyncSelect from "./AsyncSelect";
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 const insertToTextArea = (intsertString: string) => {
-  const textarea = document.querySelector('textarea');
+  const textarea = document.querySelector("textarea");
   if (!textarea) {
     return null;
   }
@@ -45,10 +45,10 @@ const insertToTextArea = (intsertString: string) => {
 const uploadImageToServer = async (file: File) => {
   try {
     const formData = new FormData();
-    formData.append('image', file);
-    const res = await fetch('http://localhost:3000/api/upload/image', {
+    formData.append("image", file);
+    const res = await fetch("http://localhost:3000/api/upload/image", {
       //***********to be changed */
-      method: 'POST',
+      method: "POST",
       body: formData,
     });
     const jsonres = await res.json();
@@ -97,19 +97,16 @@ const AddCoverImageComponent = ({
   const [isUploading, setIsUploading] = useState(false);
   const ref = useRef<any>();
 
-  console.log(file);
-
   const handleChange = (action: string) => {
-    console.log(ref.current);
     switch (action) {
-      case 'add':
+      case "add":
         ref.current.click();
         break;
-      case 'remove':
+      case "remove":
         ref.current.value = null;
         setFile(null);
         break;
-      case 'change':
+      case "change":
         ref.current.click();
         break;
       default:
@@ -122,7 +119,6 @@ const AddCoverImageComponent = ({
       const upload = async () => {
         setIsUploading(true);
         const url = await uploadImageToServer(file);
-        console.log(url);
         setCoverImageUrl && setCoverImageUrl(url);
         setIsUploading(false);
       };
@@ -143,8 +139,8 @@ const AddCoverImageComponent = ({
       />
       {isUploading && (
         <Button
-          variant={'primary'}
-          onClick={() => handleChange('add')}
+          variant={"primary"}
+          onClick={() => handleChange("add")}
           isLoading={isUploading}
           loadingText="Uploading..."
         />
@@ -153,9 +149,9 @@ const AddCoverImageComponent = ({
         <>
           {!file ? (
             <Button
-              variant={'outline'}
+              variant={"outline"}
               className="bg-white w-[200px]"
-              onClick={() => handleChange('add')}
+              onClick={() => handleChange("add")}
               isLoading={isUploading}
             >
               Add Cover Image
@@ -164,16 +160,16 @@ const AddCoverImageComponent = ({
             <div className="flex items-center gap-2">
               {file && file.name}
               <Button
-                variant={'outline'}
+                variant={"outline"}
                 className="bg-white w-[100px]"
-                onClick={() => handleChange('change')}
+                onClick={() => handleChange("change")}
               >
                 Change
               </Button>
               <Button
-                variant={'ghost'}
+                variant={"ghost"}
                 className="bg-white w-[100px] text-brick"
-                onClick={() => handleChange('remove')}
+                onClick={() => handleChange("remove")}
               >
                 Remove
               </Button>
@@ -186,24 +182,24 @@ const AddCoverImageComponent = ({
 };
 
 interface Props {
-  selectedView: 'edit' | 'preview';
-  setSelectedView: React.Dispatch<React.SetStateAction<'edit' | 'preview'>>;
+  selectedView: "edit" | "preview";
+  setSelectedView: React.Dispatch<React.SetStateAction<"edit" | "preview">>;
 }
 
 export default function Editor({ selectedView, setSelectedView }: Props) {
   const [value, setValue] = React.useState(
-    'Hello Markdown! `Tab` key uses default behavior'
+    "Hello Markdown! `Tab` key uses default behavior"
   );
-  const [title, setTitle] = useState('');
-  const [coverImageUrl, setCoverImageUrl] = useState('');
+  const [title, setTitle] = useState("");
+  const [coverImageUrl, setCoverImageUrl] = useState("");
   const [userSelectedTags, setUserSelectedTags] = useState<String[]>([]);
 
   const { mutate, isLoading, error, data } = useMutation(
-    'create-post',
+    "create-post",
     createPost,
     {
       onSuccess: () => {
-        router.push('/');
+        router.push("/");
       },
     }
   );
@@ -216,7 +212,7 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
         <div className="flex items-center font-semibold">
           <Image
             src={DEVLogo}
-            alt={'dev-logo'}
+            alt={"dev-logo"}
             className="h-[40px] w-[50px] rounded-[3px] mr-3"
           />
           <h2>Create Post</h2>
@@ -224,31 +220,31 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
 
         <div className="flex items-center gap-2">
           <Button
-            variant={'outline'}
+            variant={"outline"}
             className={`bg-white ${
-              selectedView == 'edit'
-                ? 'border-primaryBlue border-[1px] text-primaryBlue'
-                : ''
+              selectedView == "edit"
+                ? "border-primaryBlue border-[1px] text-primaryBlue"
+                : ""
             }`}
-            onClick={() => setSelectedView('edit')}
+            onClick={() => setSelectedView("edit")}
           >
             Edit
           </Button>
           <Button
-            variant={'outline'}
+            variant={"outline"}
             className={`bg-white ${
-              selectedView == 'preview'
-                ? 'border-primaryBlue border-[1px] text-primaryBlue'
-                : ''
+              selectedView == "preview"
+                ? "border-primaryBlue border-[1px] text-primaryBlue"
+                : ""
             }`}
-            onClick={() => setSelectedView('preview')}
+            onClick={() => setSelectedView("preview")}
           >
             Preview
           </Button>
 
           <Button
             className="absolute top-2 right-10"
-            onClick={() => router.push('/')}
+            onClick={() => router.push("/")}
           >
             <IoMdClose size={20} />
           </Button>
@@ -262,7 +258,7 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
               setCoverImageUrl={setCoverImageUrl}
             />
             <Input
-              variant={'unstyled'}
+              variant={"unstyled"}
               placeholder="New post title here..."
               className="text-5xl font-bold"
               title={title}
@@ -282,9 +278,9 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
                 setValue(val!);
               }}
               style={{
-                width: '850px',
-                fontSize: '18px !important',
-                borderTop: '0px !important',
+                width: "850px",
+                fontSize: "18px !important",
+                borderTop: "0px !important",
               }}
               visiableDragbar={false}
               enableScroll={false}
@@ -307,10 +303,10 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
         </div>
         <div className="flex items-center gap-5">
           <Button
-            variant={'primary'}
+            variant={"primary"}
             onClick={() =>
               mutate({
-                slug: 'new-post' + Math.random() * 100,
+                slug: "new-post" + Math.random() * 100,
                 title: title,
                 body: value,
                 coverImage: coverImageUrl,
@@ -321,7 +317,7 @@ export default function Editor({ selectedView, setSelectedView }: Props) {
           >
             Publish
           </Button>
-          <Button variant={'ghost'} className="hover:bg-[#d8dbf9] font-normal">
+          <Button variant={"ghost"} className="hover:bg-[#d8dbf9] font-normal">
             Save Draft
           </Button>
         </div>

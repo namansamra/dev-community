@@ -83,7 +83,6 @@ function PostDetails() {
       const userAlreadySaved = session?.user?.savedPostsId?.some(
         (postId: any) => postId == id
       );
-      console.log(userAlreadySaved, "save hu");
 
       if (userAlreadySaved) {
         setIsSaved(userAlreadySaved);
@@ -98,8 +97,6 @@ function PostDetails() {
       }
     }
   }, [session, id, data?.data?.data?.post]);
-
-  console.log(postData, "pos ddata ");
 
   return (
     <div className="flex flex-col w-screen relative">

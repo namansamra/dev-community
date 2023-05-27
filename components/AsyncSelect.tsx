@@ -1,9 +1,9 @@
-import React, { ReactNode, useEffect, useState } from 'react';
-import AsyncCreatableSelect from 'react-select/async-creatable';
-import { components } from 'react-select';
-import debounce from 'lodash/debounce';
-import { getTags } from '@/lib/commonApi';
-import { useQuery } from 'react-query';
+import React, { ReactNode, useEffect, useState } from "react";
+import AsyncCreatableSelect from "react-select/async-creatable";
+import { components } from "react-select";
+import debounce from "lodash/debounce";
+import { getTags } from "@/lib/commonApi";
+import { useQuery } from "react-query";
 
 type Props = {
   selectedTags: Array<String>;
@@ -13,75 +13,75 @@ type Props = {
 export const reselectStyles = {
   control: (styles: object) => ({
     ...styles,
-    backgroundColor: '#fff',
-    minHeight: '52px',
-    borderRadius: '0px',
-    border: '0',
-    ':focus-within': {
-      border: '0',
-      outline: 'none',
-      boxShadow: 'none',
-      borderBottom: '2px solid grey !important',
+    backgroundColor: "#fff",
+    minHeight: "52px",
+    borderRadius: "0px",
+    border: "0",
+    ":focus-within": {
+      border: "0",
+      outline: "none",
+      boxShadow: "none",
+      borderBottom: "2px solid grey !important",
     },
   }),
   menu: (styles: object) => ({
     ...styles,
-    marginTop: '4px',
-    boxShadow: 'none',
-    border: '1.5px solid #E4E7EC',
+    marginTop: "4px",
+    boxShadow: "none",
+    border: "1.5px solid #E4E7EC",
     zIndex: 100,
   }),
   menuList: (styles: object) => ({
     ...styles,
-    backgroundColor: '#fff',
-    fontSize: '14px',
-    borderRadius: '4px',
+    backgroundColor: "#fff",
+    fontSize: "14px",
+    borderRadius: "4px",
   }),
   option: (styles: object) => {
     return {
       ...styles,
-      backgroundColor: '#fff',
-      cursor: 'pointer',
-      padding: '10px',
-      ':hover': {
-        backgroundColor: '#f5f5f5',
+      backgroundColor: "#fff",
+      cursor: "pointer",
+      padding: "10px",
+      ":hover": {
+        backgroundColor: "#f5f5f5",
       },
     };
   },
   input: (styles: object) => ({
     ...styles,
-    color: '#344054',
-    fontSize: '16px',
-    border: '0',
+    color: "#344054",
+    fontSize: "16px",
+    border: "0",
   }),
   placeholder: (styles: object) => ({
     ...styles,
-    fontSize: '16px',
-    color: '#98A2B3',
+    fontSize: "16px",
+    color: "#98A2B3",
   }),
   singleValue: (styles: object) => ({
     ...styles,
-    color: 'inherit',
-    fontSize: '16px',
+    color: "inherit",
+    fontSize: "16px",
   }),
   multiValue: (styles: object) => ({
     ...styles,
-    color: 'inherit',
-    fontSize: '20px',
-    padding: '2px',
-    backgroundColor: '#f5f5f5',
-    borderRadius: '5px',
+    color: "inherit",
+    fontSize: "20px",
+    padding: "2px",
+    backgroundColor: "#f5f5f5",
+    borderRadius: "5px",
   }),
   multiValueRemove: (styles: object) => ({
     ...styles,
-    color: 'grey',
-    fontSize: '20px',
-    scale: '1.2',
-    padding: '2px',
-    height: 'max-content',
-    margin: 'auto',
-    ':hover': {
-      color: 'grey',
+    color: "grey",
+    fontSize: "20px",
+    scale: "1.2",
+    padding: "2px",
+    height: "max-content",
+    margin: "auto",
+    ":hover": {
+      color: "grey",
     },
   }),
 };
@@ -94,21 +94,17 @@ const getData = async (input: string, callback: any) => {
 };
 
 function AsyncSelect({ selectedTags, setSelectedTags }: Props) {
-  const { data } = useQuery('get-default-tags', async () => {
-    const res = await getTags('');
-    console.log(res, 'res hu');
+  const { data } = useQuery("get-default-tags", async () => {
+    const res = await getTags("");
     return res.data.data.tags.map((i: any) => {
       return { label: i.name, value: i.name, info: i.info };
     });
   });
 
-  console.log(selectedTags);
-
   const handleOptionSelect = (data: any) => {
-    console.log(data);
     setSelectedTags(
       data.map((i: any) =>
-        i.value.includes('#')
+        i.value.includes("#")
           ? i
           : { label: `#${i.label}`, value: `#${i.value}` }
       )
@@ -141,7 +137,6 @@ function AsyncSelect({ selectedTags, setSelectedTags }: Props) {
   );
 }
 const CustomOption = ({ props }: { props: any }) => {
-  console.log(props);
   return (
     <React.Fragment>
       <components.Option {...props}>
