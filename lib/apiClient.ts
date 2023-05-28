@@ -5,7 +5,9 @@ console.log(
   "urlssssss"
 );
 export const api = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_VERCEL_URL}/api`,
+  baseURL: process.env.NEXT_PUBLIC_SITE_URL
+    ? `https://${process.env.NEXT_PUBLIC_SITE_URL}/api`
+    : `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api`,
 });
 
 api.interceptors.request.use(async (config) => {
