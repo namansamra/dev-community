@@ -76,7 +76,14 @@ const UserMenuButton = ({ user }: { user: any }) => {
           ))}
         </MenuGroup>
         <MenuDivider />
-        <MenuItem onClick={() => signOut()}>Sign Out</MenuItem>
+        <MenuItem
+          onClick={() => {
+            signOut();
+            localStorage.removeItem("sessionInfo");
+          }}
+        >
+          Sign Out
+        </MenuItem>
       </MenuList>
     </Menu>
   );
