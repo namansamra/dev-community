@@ -10,6 +10,10 @@ const nextConfig = {
       },
     ],
   },
+};
+
+module.exports = removeImports({
+  ...nextConfig,
   async headers() {
     return [
       {
@@ -31,8 +35,4 @@ const nextConfig = {
       },
     ];
   },
-};
-
-module.exports = removeImports({
-  ...nextConfig,
 });
