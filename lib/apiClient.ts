@@ -1,8 +1,8 @@
 import axios from "axios";
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_SITE_URL
-    ? process.env.NEXT_PUBLIC_SITE_URL
-    : process.env.NEXT_PUBLIC_VERCEL_URL,
+    ? `${process.env.NEXT_PUBLIC_SITE_URL}/api`
+    : `${process.env.NEXT_PUBLIC_VERCEL_URL}/api`,
 });
 
 api.interceptors.request.use(async (config) => {
