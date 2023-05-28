@@ -1,14 +1,15 @@
-import '@/styles/globals.css';
-import { QueryClientProvider, QueryClient } from 'react-query';
-import type { AppProps } from 'next/app';
-import { ChakraProvider } from '@chakra-ui/react';
-import { CacheProvider } from '@emotion/react';
-import createCache from '@emotion/cache';
-import chakraTheme from '../styles/chakraTheme';
-import { useSessionCustom } from '@/lib/next-auth-react-query';
-import { ReactNode } from 'react';
-import type { NextComponentType } from 'next';
-import { ReactQueryDevtools } from 'react-query/devtools';
+import "@/styles/globals.css";
+import { QueryClientProvider, QueryClient } from "react-query";
+import type { AppProps } from "next/app";
+import { ChakraProvider } from "@chakra-ui/react";
+import { CacheProvider } from "@emotion/react";
+import createCache from "@emotion/cache";
+import chakraTheme from "../styles/chakraTheme";
+import { useSessionCustom } from "@/lib/next-auth-react-query";
+import { ReactNode } from "react";
+import type { NextComponentType } from "next";
+import { ReactQueryDevtools } from "react-query/devtools";
+import HashLoader from "react-spinners/HashLoader";
 
 //Add custom appProp type then use union to add it
 type CustomAppProps = AppProps & {
@@ -17,7 +18,7 @@ type CustomAppProps = AppProps & {
 
 export default function App({ Component, pageProps }: CustomAppProps) {
   const emotionCache = createCache({
-    key: 'emotion-css-cache',
+    key: "emotion-css-cache",
     prepend: true, // ensures styles are prepended to the <head>, instead of appended
   });
 
@@ -53,8 +54,12 @@ export default function App({ Component, pageProps }: CustomAppProps) {
 function Auth({ children }: { children: ReactNode }) {
   // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
   const { session, status } = useSessionCustom({ required: true });
-  if (status === 'loading') {
-    return <div>Loading...</div>;
+  if (status === "loading") {
+    return (
+      <div className=" w-screen h-screen flex justify-center items-center p-5">
+        <HashLoader color="#3B49DF" />
+      </div>
+    );
   }
 
   return <>{children}</>;

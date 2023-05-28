@@ -20,6 +20,7 @@ import SavedFilled from "@/assets/images/save-filled.svg";
 import SavedEmpty from "@/assets/images/save.svg";
 import { useSessionCustom } from "@/lib/next-auth-react-query";
 import CommentSection from "@/components/Comment";
+import HashLoader from "react-spinners/HashLoader";
 
 function PostDetails() {
   const router = useRouter();
@@ -102,7 +103,9 @@ function PostDetails() {
     <div className="flex flex-col w-screen relative">
       <Header />
       {isLoading ? (
-        <div className="bg-black text-white text-2xl">Loading...</div>
+        <div className=" w-screen h-screen flex justify-center items-center p-5">
+          <HashLoader color="#3B49DF" />
+        </div>
       ) : (
         <div className="flex justify-between mt-[80px] sm:px-4 md:px-6 xl:mx-[80px] xl:px-0 gap-4">
           <div
